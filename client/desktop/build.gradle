@@ -1,0 +1,3 @@
+project.ext.mainClassName = "de.fragstyle.spacehunters.client.desktop.DesktopLauncher"
+
+apply from: rootProject.projectDir.toPath().resolve("desktop.gradle").toString()

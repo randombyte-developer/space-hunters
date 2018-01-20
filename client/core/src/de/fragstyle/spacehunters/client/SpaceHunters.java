@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters;
+package de.fragstyle.spacehunters.client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;

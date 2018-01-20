@@ -1,1 +1,11 @@
-include 'desktop', 'core'
+rootProject.name = "space-hunters"
+
+include "client"
+include "client:desktop"
+include "client:core"
+
+include "server"
+include "server:desktop"
+include "server:core"
+
+include "common"

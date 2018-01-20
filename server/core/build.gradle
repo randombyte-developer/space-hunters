@@ -1,0 +1,1 @@
+apply from: rootProject.projectDir.toPath().resolve("core.gradle").toString()

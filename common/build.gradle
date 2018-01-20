@@ -1,0 +1,16 @@
+/*    ext {
+        appName = "space-hunters"
+        gdxVersion = "1.9.8"
+        roboVMVersion = "2.3.1"
+        box2DLightsVersion = "1.4"
+        ashleyVersion = "1.7.0"
+        aiVersion = "1.8.0"
+    }*/
+
+apply plugin: "java"
+
+dependencies {
+    compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+
+}
