@@ -47,7 +47,7 @@ public class PlayerList {
   public boolean removeByKryoNetClientId(int id) {
     List<UUID> uuids = getByKryoNetClientId(id);
     boolean empty = uuids.isEmpty();
-    uuids.forEach(players::remove);
+    uuids.forEach(this::remove);
 
     return !empty;
   }
