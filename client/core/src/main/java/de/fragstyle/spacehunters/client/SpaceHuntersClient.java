@@ -3,8 +3,10 @@ package de.fragstyle.spacehunters.client;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.async.AsyncExecutor;
 import com.esotericsoftware.kryonet.Client;
 import de.fragstyle.spacehunters.client.listeners.Listeners;
 import de.fragstyle.spacehunters.common.KryoUtils;
@@ -21,6 +23,8 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
   private final Client client = new Client();
 
+  private AsyncExecutor asyncExecutor = new AsyncExecutor(3);
+
   public static final String TAG = "SpaceHuntersClient";
 
   @Override
@@ -30,10 +34,26 @@ public class SpaceHuntersClient extends ApplicationAdapter {
     Gdx.input.setInputProcessor(stage);
 
     prepareAndStartClient();
-    Optional<String> error = connect("localhost");
-    Gdx.app.log(TAG, error.orElse("Successfully connected"));
 
-    client.sendTCP(new LoginRequest(new Player(UUID.randomUUID(), "Player1")));
+    ConnectDialog connectDialog = new ConnectDialog("Mit Server verbinden", skin,
+        "Player" + MathUtils.random(1, 100), "localhost") {
+      @Override
+      protected void gotInput(ConnectDialog dialog, String username, String hostname) {
+        asyncExecutor.submit(() -> {
+          dialog.setStatus("Verbinden...");
+          Optional<String> error = connect(username, hostname);
+          if (error.isPresent()) {
+            dialog.setStatus(error.get());
+          } else {
+            dialog.setStatus("Verbunden!");
+            dialog.hide();
+          }
+
+          return null;
+        });
+      }
+    };
+    connectDialog.show(stage);
   }
 
   @Override
@@ -64,12 +84,14 @@ public class SpaceHuntersClient extends ApplicationAdapter {
   /**
    * @return contains the error message or is absent if it connected successfully
    */
-  private Optional<String> connect(String host) {
+  private Optional<String> connect(String username, String host) {
     try {
       client.connect(5000, host, 9880, 9881);
-      return Optional.empty();
     } catch (IOException e) {
       return Optional.of(e.getMessage());
     }
+
+    client.sendTCP(new LoginRequest(new Player(UUID.randomUUID(), username)));
+    return Optional.empty();
   }
 }
