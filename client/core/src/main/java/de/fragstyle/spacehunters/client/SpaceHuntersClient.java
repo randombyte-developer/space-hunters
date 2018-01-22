@@ -16,20 +16,21 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class SpaceHuntersClient extends ApplicationAdapter {
-	SpriteBatch batch;
 
-	private Stage stage;
-	private Skin skin;
+  SpriteBatch batch;
+
+  private Stage stage;
+  private Skin skin;
 
   private final Client client = new Client();
 
   public static final String TAG = "SpaceHuntersClient";
 
   @Override
-	public void create () {
-		batch = new SpriteBatch();
+  public void create() {
+    batch = new SpriteBatch();
 
-		stage = new Stage();
+    stage = new Stage();
     skin = new Skin(Gdx.files.internal("uiskin.json"));
     Gdx.input.setInputProcessor(stage);
 
@@ -40,21 +41,21 @@ public class SpaceHuntersClient extends ApplicationAdapter {
     client.sendTCP(new LoginRequest(new Player(UUID.randomUUID(), "Player1")));
   }
 
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(0, client.isConnected() ? 1 : 0, 1, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.end();
+  @Override
+  public void render() {
+    Gdx.gl.glClearColor(0, client.isConnected() ? 1 : 0, 1, 1);
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    batch.begin();
+    batch.end();
 
-		stage.act();
-		stage.draw();
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		stage.dispose();
+    stage.act();
+    stage.draw();
+  }
+
+  @Override
+  public void dispose() {
+    batch.dispose();
+    stage.dispose();
     try {
       client.dispose();
     } catch (IOException e) {

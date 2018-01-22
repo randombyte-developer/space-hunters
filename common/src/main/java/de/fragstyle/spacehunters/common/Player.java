@@ -8,7 +8,7 @@ public class Player {
 
   private String name;
 
-  private Player() {}
+  private Player() { }
 
   public Player(UUID uuid, String name) {
     this.uuid = uuid;

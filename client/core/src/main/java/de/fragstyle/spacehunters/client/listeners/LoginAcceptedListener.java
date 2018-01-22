@@ -7,6 +7,7 @@ import de.fragstyle.spacehunters.client.SpaceHuntersClient;
 import de.fragstyle.spacehunters.common.packets.login.LoginAccepted;
 
 public class LoginAcceptedListener extends Listener {
+
   @Override
   public void received(Connection connection, Object object) {
     super.received(connection, object);
