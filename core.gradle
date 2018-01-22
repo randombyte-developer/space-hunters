@@ -1,10 +1,8 @@
-apply plugin: "java"
-
 sourceCompatibility = 1.8
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 dependencies {
     compile project(":common")
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    compile "com.esotericsoftware:kryonet:2.22.0-RC1"
 }

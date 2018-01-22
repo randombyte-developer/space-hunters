@@ -1,12 +1,6 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-    }
-}
-
 allprojects {
     apply plugin: "idea"
+    apply plugin: "java"
 
     version = "1.0"
     ext {
@@ -22,5 +16,9 @@ allprojects {
         jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+
+    dependencies {
+        compile "com.esotericsoftware:kryonet:2.22.0-RC1"
     }
 }

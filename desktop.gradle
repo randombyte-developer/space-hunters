@@ -1,8 +1,4 @@
-apply plugin: "java"
-
 sourceCompatibility = 1.8
-
-apply plugin: "java"
 
 dependencies {
     compile project(":${project.parent.name}:core")
