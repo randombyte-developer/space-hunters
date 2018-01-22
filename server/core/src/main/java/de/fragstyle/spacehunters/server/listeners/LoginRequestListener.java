@@ -21,9 +21,7 @@ public class LoginRequestListener extends Listener {
   public void disconnected(Connection connection) {
     super.disconnected(connection);
 
-    if (!playerList.removeByKryoNetClientId(connection.getID())) {
-      throw new RuntimeException("Shouldn't happen!");
-    }
+    playerList.removeByKryoNetClientId(connection.getID());
   }
 
   @Override

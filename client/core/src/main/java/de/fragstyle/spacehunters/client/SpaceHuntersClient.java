@@ -3,7 +3,6 @@ package de.fragstyle.spacehunters.client;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Client;
@@ -17,8 +16,6 @@ import java.util.UUID;
 
 public class SpaceHuntersClient extends ApplicationAdapter {
 
-  SpriteBatch batch;
-
   private Stage stage;
   private Skin skin;
 
@@ -28,8 +25,6 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
   @Override
   public void create() {
-    batch = new SpriteBatch();
-
     stage = new Stage();
     skin = new Skin(Gdx.files.internal("uiskin.json"));
     Gdx.input.setInputProcessor(stage);
@@ -45,8 +40,6 @@ public class SpaceHuntersClient extends ApplicationAdapter {
   public void render() {
     Gdx.gl.glClearColor(0, client.isConnected() ? 1 : 0, 1, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    batch.begin();
-    batch.end();
 
     stage.act();
     stage.draw();
@@ -54,7 +47,6 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
   @Override
   public void dispose() {
-    batch.dispose();
     stage.dispose();
     try {
       client.dispose();

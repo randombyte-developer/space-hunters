@@ -3,7 +3,9 @@ package de.fragstyle.spacehunters.server;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Server;
 import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.server.listeners.Listeners;
@@ -11,16 +13,24 @@ import java.io.IOException;
 
 public class SpaceHuntersServer extends ApplicationAdapter {
 
-  SpriteBatch batch;
-
   private final Server server = new Server();
   private final PlayerList playerList = new PlayerList();
+
+  private Stage stage;
+  private Skin skin;
+
+  private Label infoLabel;
 
   public static final String TAG = "SpaceHuntersServer";
 
   @Override
   public void create() {
-    batch = new SpriteBatch();
+    stage = new Stage();
+    skin = new Skin(Gdx.files.internal("uiskin.json"));
+    Gdx.input.setInputProcessor(stage);
+
+    infoLabel = new Label("Connected clients: 0", skin);
+    stage.addActor(infoLabel);
 
     KryoUtils.prepareKryo(server.getKryo());
     Listeners.registerListeners(this, server);
@@ -39,14 +49,16 @@ public class SpaceHuntersServer extends ApplicationAdapter {
   public void render() {
     Gdx.gl.glClearColor(0, 0, 1, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    batch.begin();
-    batch.end();
+
+    infoLabel.setText("Connected clients: " + server.getConnections().length);
+
+    stage.act();
+    stage.draw();
   }
 
   @Override
   public void dispose() {
-    batch.dispose();
-
+    stage.dispose();
     try {
       server.dispose();
     } catch (IOException e) {
