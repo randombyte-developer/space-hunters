@@ -2,15 +2,19 @@ package de.fragstyle.spacehunters.client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.esotericsoftware.kryonet.Client;
 import de.fragstyle.spacehunters.client.listeners.Listeners;
 import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.common.Player;
+import de.fragstyle.spacehunters.common.drawing.Ship;
 import de.fragstyle.spacehunters.common.packets.login.LoginRequest;
 import java.io.IOException;
 import java.util.Optional;
@@ -19,6 +23,8 @@ import java.util.UUID;
 public class SpaceHuntersClient extends ApplicationAdapter {
 
   private Stage stage;
+  private Camera camera;
+  private FitViewport viewport;
   private Skin skin;
 
   private final Client client = new Client();
@@ -29,7 +35,10 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
   @Override
   public void create() {
+    camera = new PerspectiveCamera();
+    viewport = new FitViewport(800, 480, camera);
     stage = new Stage();
+
     skin = new Skin(Gdx.files.internal("uiskin.json"));
     Gdx.input.setInputProcessor(stage);
 
@@ -47,6 +56,7 @@ public class SpaceHuntersClient extends ApplicationAdapter {
           } else {
             dialog.setStatus("Verbunden!");
             dialog.hide();
+            stage.addActor(new Ship());
           }
 
           return null;
@@ -63,6 +73,11 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
     stage.act();
     stage.draw();
+  }
+
+  @Override
+  public void resize(int width, int height) {
+    viewport.update(width, height, true);
   }
 
   @Override
