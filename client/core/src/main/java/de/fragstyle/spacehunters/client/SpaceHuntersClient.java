@@ -2,9 +2,11 @@ package de.fragstyle.spacehunters.client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -14,6 +16,7 @@ import com.esotericsoftware.kryonet.Client;
 import de.fragstyle.spacehunters.client.listeners.Listeners;
 import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.common.Player;
+import de.fragstyle.spacehunters.common.drawing.Frame;
 import de.fragstyle.spacehunters.common.drawing.Ship;
 import de.fragstyle.spacehunters.common.packets.login.LoginRequest;
 import java.io.IOException;
@@ -23,7 +26,7 @@ import java.util.UUID;
 public class SpaceHuntersClient extends ApplicationAdapter {
 
   private Stage stage;
-  private Camera camera;
+  private OrthographicCamera camera;
   private FitViewport viewport;
   private Skin skin;
 
@@ -33,11 +36,13 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
   public static final String TAG = "SpaceHuntersClient";
 
+  private final FPSLogger fpsLogger = new FPSLogger();
+
   @Override
   public void create() {
-    camera = new PerspectiveCamera();
+    camera = new OrthographicCamera();
     viewport = new FitViewport(800, 480, camera);
-    stage = new Stage();
+    stage = new Stage(viewport);
 
     skin = new Skin(Gdx.files.internal("uiskin.json"));
     Gdx.input.setInputProcessor(stage);
@@ -56,22 +61,34 @@ public class SpaceHuntersClient extends ApplicationAdapter {
           } else {
             dialog.setStatus("Verbunden!");
             dialog.hide();
-            stage.addActor(new Ship());
           }
 
           return null;
         });
       }
     };
-    connectDialog.show(stage);
+
+    //connectDialog.show(stage);
+
+    stage.addActor(new Ship());
+
+    Frame frame = new Frame(0, 0, 200, 200, 10, Color.GOLD);
+    stage.addActor(frame);
+
+    camera.zoom = 2;
+
+    stage.setDebugAll(true);
   }
 
   @Override
   public void render() {
-    Gdx.gl.glClearColor(0, client.isConnected() ? 1 : 0, 1, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    stage.act();
+    handleInput();
+
+    camera.update();
+
+    stage.act(Gdx.graphics.getDeltaTime());
     stage.draw();
   }
 
@@ -108,5 +125,32 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
     client.sendTCP(new LoginRequest(new Player(UUID.randomUUID(), username)));
     return Optional.empty();
+  }
+
+  private void handleInput() {
+    if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+      camera.zoom += 0.02;
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+      camera.zoom -= 0.02;
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+      camera.translate(-6, 0, 0);
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+      camera.translate(6, 0, 0);
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+      camera.translate(0, -6, 0);
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+      camera.translate(0, 6, 0);
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+      camera.rotate(-1, 0, 0, 1);
+    }
+    if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+      camera.rotate(1, 0, 0, 1);
+    }
   }
 }

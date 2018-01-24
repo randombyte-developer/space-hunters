@@ -10,13 +10,11 @@ public class Ship extends Actor {
     private Texture texture = new Texture(Gdx.files.internal("ship.png"));
 
     public Ship() {
-
+        setBounds(0, 0, texture.getWidth(), texture.getHeight());
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-
-        batch.draw(texture, 0, 0);
+        batch.draw(texture, getX(), getY());
     }
 }
