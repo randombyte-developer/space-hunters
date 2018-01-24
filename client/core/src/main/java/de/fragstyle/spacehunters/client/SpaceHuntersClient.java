@@ -4,7 +4,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
@@ -35,8 +34,6 @@ public class SpaceHuntersClient extends ApplicationAdapter {
   private AsyncExecutor asyncExecutor = new AsyncExecutor(3);
 
   public static final String TAG = "SpaceHuntersClient";
-
-  private final FPSLogger fpsLogger = new FPSLogger();
 
   @Override
   public void create() {
@@ -72,7 +69,7 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
     stage.addActor(new Ship());
 
-    Frame frame = new Frame(0, 0, 200, 200, 10, Color.GOLD);
+    Frame frame = new Frame(0, 0, 2000, 1000, 10, Color.RED);
     stage.addActor(frame);
 
     camera.zoom = 2;

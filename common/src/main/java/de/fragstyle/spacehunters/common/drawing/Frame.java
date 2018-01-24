@@ -27,9 +27,9 @@ public class Frame extends Group {
     Vector2 leftPosition = new Vector2(centerX - (width / 2) + thickness, centerY - (height / 2));
 
     Rectangle topRectangle = new Rectangle(width - thickness, thickness, color);
-    Rectangle rightRectangle = new Rectangle(width - thickness, thickness, color);
+    Rectangle rightRectangle = new Rectangle(height - thickness, thickness, color);
     Rectangle bottomRectangle = new Rectangle(width - thickness, thickness, color);
-    Rectangle leftRectangle = new Rectangle(width - thickness, thickness, color);
+    Rectangle leftRectangle = new Rectangle(height - thickness, thickness, color);
 
     topRectangle.setPosition(topPosition);
     rightRectangle.setPosition(rightPosition);
