@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import de.fragstyle.spacehunters.client.SpaceHuntersClient;
-import de.fragstyle.spacehunters.common.packets.login.Disconnected;
+import de.fragstyle.spacehunters.common.packets.server.Disconnected;
 
 public class DisconnectedListener extends Listener {
 

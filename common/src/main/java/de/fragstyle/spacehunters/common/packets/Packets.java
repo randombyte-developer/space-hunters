@@ -2,9 +2,11 @@ package de.fragstyle.spacehunters.common.packets;
 
 import com.esotericsoftware.kryo.Kryo;
 import de.fragstyle.spacehunters.common.Player;
-import de.fragstyle.spacehunters.common.packets.login.Disconnected;
-import de.fragstyle.spacehunters.common.packets.login.LoginAccepted;
-import de.fragstyle.spacehunters.common.packets.login.LoginRequest;
+import de.fragstyle.spacehunters.common.packets.client.InputPacket;
+import de.fragstyle.spacehunters.common.packets.client.LoginRequest;
+import de.fragstyle.spacehunters.common.packets.server.Disconnected;
+import de.fragstyle.spacehunters.common.packets.server.LoginAccepted;
+import de.fragstyle.spacehunters.common.packets.server.Players;
 
 public class Packets {
 
@@ -13,6 +15,9 @@ public class Packets {
     kryo.register(LoginAccepted.class);
     kryo.register(Disconnected.class);
 
+    kryo.register(InputPacket.class);
+
     kryo.register(Player.class);
+    kryo.register(Players.class);
   }
 }

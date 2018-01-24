@@ -3,13 +3,13 @@ package de.fragstyle.spacehunters.server.listeners;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import de.fragstyle.spacehunters.common.Player;
-import de.fragstyle.spacehunters.common.packets.login.Disconnected;
-import de.fragstyle.spacehunters.common.packets.login.LoginAccepted;
-import de.fragstyle.spacehunters.common.packets.login.LoginRequest;
+import de.fragstyle.spacehunters.common.packets.server.Disconnected;
+import de.fragstyle.spacehunters.common.packets.server.LoginAccepted;
+import de.fragstyle.spacehunters.common.packets.client.LoginRequest;
 import de.fragstyle.spacehunters.server.PlayerList;
 import de.fragstyle.spacehunters.server.ServerPlayer;
 
-public class LoginRequestListener extends Listener {
+public abstract class LoginRequestListener extends Listener {
 
   private final PlayerList playerList;
 
@@ -19,15 +19,11 @@ public class LoginRequestListener extends Listener {
 
   @Override
   public void disconnected(Connection connection) {
-    super.disconnected(connection);
-
     playerList.removeByKryoNetClientId(connection.getID());
   }
 
   @Override
   public void received(Connection connection, Object object) {
-    super.received(connection, object);
-
     if (object instanceof LoginRequest) {
       LoginRequest loginRequest = (LoginRequest) object;
       Player player = loginRequest.getPlayer();
@@ -38,15 +34,17 @@ public class LoginRequestListener extends Listener {
         return;
       }
 
-      boolean success = playerList.add(ServerPlayer.fromPlayer(player, connection));
-      // check if UUID of Player already in use
-      if (!success) {
+      if (playerList.getPlayers().containsKey(player.getUuid())) {
         connection.sendTCP(Disconnected.PLAYER_ID_ALREADY_IN_USE);
         connection.close();
         return;
       }
 
+      newPlayer(ServerPlayer.fromPlayer(player, connection));
+
       connection.sendTCP(new LoginAccepted());
     }
   }
+
+  protected abstract void newPlayer(ServerPlayer serverPlayer);
 }

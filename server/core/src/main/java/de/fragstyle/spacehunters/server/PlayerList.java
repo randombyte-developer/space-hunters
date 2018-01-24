@@ -2,11 +2,10 @@ package de.fragstyle.spacehunters.server;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Tracks the connected Players.
@@ -45,19 +44,20 @@ public class PlayerList {
    * @return true if a client ID matched and was removed
    */
   public boolean removeByKryoNetClientId(int id) {
-    List<UUID> uuids = getByKryoNetClientId(id);
-    boolean empty = uuids.isEmpty();
-    uuids.forEach(this::remove);
-
-    return !empty;
+    Optional<UUID> uuidOpt = getByKryoNetClientId(id);
+    if (!uuidOpt.isPresent()) {
+      return false;
+    }
+    remove(uuidOpt.get());
+    return true;
   }
 
-  private List<UUID> getByKryoNetClientId(int id) {
+  public Optional<UUID> getByKryoNetClientId(int id) {
     return players.entrySet()
         .stream()
         .filter(entry -> entry.getValue().getConnection().getID() == id)
         .map(Entry::getKey)
-        .collect(Collectors.toList());
+        .findFirst();
   }
 
   public boolean isNameAlreadyInUse(String name) {

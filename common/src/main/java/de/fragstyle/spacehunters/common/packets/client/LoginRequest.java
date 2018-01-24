@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.packets.login;
+package de.fragstyle.spacehunters.common.packets.client;
 
 import de.fragstyle.spacehunters.common.Player;
 

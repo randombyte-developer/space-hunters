@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Server;
 import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.server.listeners.Listeners;
+import de.fragstyle.spacehunters.server.state.ShipsState;
 import java.io.IOException;
 
 public class SpaceHuntersServer extends ApplicationAdapter {
@@ -20,6 +21,8 @@ public class SpaceHuntersServer extends ApplicationAdapter {
   private Skin skin;
 
   private Label infoLabel;
+
+  private final ShipsState shipsState = new ShipsState();
 
   public static final String TAG = "SpaceHuntersServer";
 
@@ -52,6 +55,9 @@ public class SpaceHuntersServer extends ApplicationAdapter {
 
     infoLabel.setText("Connected clients: " + server.getConnections().length);
 
+    shipsState.act();
+    shipsState.logAllShips();
+
     stage.act();
     stage.draw();
   }
@@ -68,5 +74,9 @@ public class SpaceHuntersServer extends ApplicationAdapter {
 
   public PlayerList getPlayerList() {
     return playerList;
+  }
+
+  public ShipsState getShipsState() {
+    return shipsState;
   }
 }

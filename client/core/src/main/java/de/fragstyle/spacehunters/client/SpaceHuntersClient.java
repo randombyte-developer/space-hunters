@@ -2,7 +2,7 @@ package de.fragstyle.spacehunters.client;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -17,7 +17,8 @@ import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.common.Player;
 import de.fragstyle.spacehunters.common.drawing.Frame;
 import de.fragstyle.spacehunters.common.drawing.Ship;
-import de.fragstyle.spacehunters.common.packets.login.LoginRequest;
+import de.fragstyle.spacehunters.common.packets.client.LoginRequest;
+import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
@@ -55,6 +56,7 @@ public class SpaceHuntersClient extends ApplicationAdapter {
           Optional<String> error = connect(username, hostname);
           if (error.isPresent()) {
             dialog.setStatus(error.get());
+            Gdx.app.log(TAG, error.get());
           } else {
             dialog.setStatus("Verbunden!");
             dialog.hide();
@@ -65,7 +67,7 @@ public class SpaceHuntersClient extends ApplicationAdapter {
       }
     };
 
-    //connectDialog.show(stage);
+    connectDialog.show(stage);
 
     stage.addActor(new Ship());
 
@@ -82,6 +84,10 @@ public class SpaceHuntersClient extends ApplicationAdapter {
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     handleInput();
+    InputPacket inputPacket = createInputPacket();
+    if (client.isConnected()) {
+      client.sendUDP(inputPacket);
+    }
 
     camera.update();
 
@@ -124,29 +130,49 @@ public class SpaceHuntersClient extends ApplicationAdapter {
     return Optional.empty();
   }
 
+  private InputPacket createInputPacket() {
+    short x = 0;
+    short y = 0;
+
+    if (Gdx.input.isKeyPressed(Keys.D)) {
+      x += 1;
+    }
+    if (Gdx.input.isKeyPressed(Keys.A)) {
+      x -= 1;
+    }
+    if (Gdx.input.isKeyPressed(Keys.W)) {
+      y += 1;
+    }
+    if (Gdx.input.isKeyPressed(Keys.S)) {
+      y -= 1;
+    }
+
+    return new InputPacket(x, y);
+  }
+
   private void handleInput() {
-    if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+    if (Gdx.input.isKeyPressed(Keys.M)) {
       camera.zoom += 0.02;
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+    if (Gdx.input.isKeyPressed(Keys.N)) {
       camera.zoom -= 0.02;
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+    if (Gdx.input.isKeyPressed(Keys.LEFT)) {
       camera.translate(-6, 0, 0);
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+    if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
       camera.translate(6, 0, 0);
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+    if (Gdx.input.isKeyPressed(Keys.DOWN)) {
       camera.translate(0, -6, 0);
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+    if (Gdx.input.isKeyPressed(Keys.UP)) {
       camera.translate(0, 6, 0);
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+    if (Gdx.input.isKeyPressed(Keys.X)) {
       camera.rotate(-1, 0, 0, 1);
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+    if (Gdx.input.isKeyPressed(Keys.C)) {
       camera.rotate(1, 0, 0, 1);
     }
   }

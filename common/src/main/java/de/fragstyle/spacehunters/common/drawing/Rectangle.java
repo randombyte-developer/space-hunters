@@ -35,6 +35,7 @@ public class Rectangle extends BetterActor {
     shapeRenderer.setColor(color);
     shapeRenderer.rect(getX(), getY(), getOriginX(), getOriginY(), width, height, getScaleX(), getScaleY(), getRotation());
 
+    // todo remove
     shapeRenderer.circle(0, 0, 10);
     shapeRenderer.circle(100, 0, 10);
     shapeRenderer.circle(200, 0, 10);
