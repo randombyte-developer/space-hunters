@@ -8,9 +8,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Server;
 import de.fragstyle.spacehunters.common.KryoUtils;
+import de.fragstyle.spacehunters.common.packets.server.ShipPacketList;
 import de.fragstyle.spacehunters.server.listeners.Listeners;
-import de.fragstyle.spacehunters.server.state.ShipsState;
+import de.fragstyle.spacehunters.common.ShipsState;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.UUID;
 
 public class SpaceHuntersServer extends ApplicationAdapter {
 
@@ -23,6 +27,8 @@ public class SpaceHuntersServer extends ApplicationAdapter {
   private Label infoLabel;
 
   private final ShipsState shipsState = new ShipsState();
+
+  private int millisSinceLastPositionUpdate = 0;
 
   public static final String TAG = "SpaceHuntersServer";
 
@@ -57,6 +63,14 @@ public class SpaceHuntersServer extends ApplicationAdapter {
 
     shipsState.act();
     shipsState.logAllShips();
+
+    millisSinceLastPositionUpdate += Gdx.graphics.getDeltaTime() / 1000;
+    if (millisSinceLastPositionUpdate >= 100) {
+      for (Map.Entry<UUID, ServerPlayer> entry : playerList.getPlayers().entrySet()) {
+        entry.getValue().getConnection().sendUDP(new ShipPacketList(new ArrayList<>(shipsState.getShips().values())));
+      }
+      millisSinceLastPositionUpdate = 0;
+    }
 
     stage.act();
     stage.draw();

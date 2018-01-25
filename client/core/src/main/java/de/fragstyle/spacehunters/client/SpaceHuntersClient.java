@@ -15,6 +15,7 @@ import com.esotericsoftware.kryonet.Client;
 import de.fragstyle.spacehunters.client.listeners.Listeners;
 import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.common.Player;
+import de.fragstyle.spacehunters.common.ShipsState;
 import de.fragstyle.spacehunters.common.drawing.Frame;
 import de.fragstyle.spacehunters.common.drawing.Ship;
 import de.fragstyle.spacehunters.common.packets.client.LoginRequest;
@@ -31,6 +32,8 @@ public class SpaceHuntersClient extends ApplicationAdapter {
   private Skin skin;
 
   private final Client client = new Client();
+
+  private final ShipsState shipsState = new ShipsState();
 
   private AsyncExecutor asyncExecutor = new AsyncExecutor(3);
 

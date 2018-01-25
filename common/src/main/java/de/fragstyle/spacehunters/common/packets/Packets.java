@@ -6,7 +6,7 @@ import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import de.fragstyle.spacehunters.common.packets.client.LoginRequest;
 import de.fragstyle.spacehunters.common.packets.server.Disconnected;
 import de.fragstyle.spacehunters.common.packets.server.LoginAccepted;
-import de.fragstyle.spacehunters.common.packets.server.Players;
+import de.fragstyle.spacehunters.common.packets.server.ShipPacketList;
 
 public class Packets {
 
@@ -18,6 +18,6 @@ public class Packets {
     kryo.register(InputPacket.class);
 
     kryo.register(Player.class);
-    kryo.register(Players.class);
+    kryo.register(ShipPacketList.class);
   }
 }
