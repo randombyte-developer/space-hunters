@@ -7,16 +7,16 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Server;
+import de.fragstyle.spacehunters.common.GameState;
 import de.fragstyle.spacehunters.common.KryoUtils;
-import de.fragstyle.spacehunters.common.packets.server.ShipPacketList;
+import de.fragstyle.spacehunters.common.packets.GameSnapshotBuffer;
+import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
 import de.fragstyle.spacehunters.server.listeners.Listeners;
-import de.fragstyle.spacehunters.common.ShipsState;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.UUID;
 
 public class SpaceHuntersServer extends ApplicationAdapter {
+
+  private static final int GAME_STATE_TIME_FRAME = 100;
 
   private final Server server = new Server();
   private final PlayerList playerList = new PlayerList();
@@ -26,9 +26,10 @@ public class SpaceHuntersServer extends ApplicationAdapter {
 
   private Label infoLabel;
 
-  private final ShipsState shipsState = new ShipsState();
+  private final GameSnapshotBuffer gameSnapshotBuffer = new GameSnapshotBuffer();
+  private final GameState gameState = new GameState();
 
-  private int millisSinceLastPositionUpdate = 0;
+  private int millisSinceLastGameStateUpdate = 0;
 
   public static final String TAG = "SpaceHuntersServer";
 
@@ -61,16 +62,18 @@ public class SpaceHuntersServer extends ApplicationAdapter {
 
     infoLabel.setText("Connected clients: " + server.getConnections().length);
 
-    shipsState.act();
-    shipsState.logAllShips();
+    gameState.act();
+    gameState.logAllShips();
 
-    millisSinceLastPositionUpdate += Gdx.graphics.getDeltaTime() / 1000;
-    if (millisSinceLastPositionUpdate >= 100) {
-      for (Map.Entry<UUID, ServerPlayer> entry : playerList.getPlayers().entrySet()) {
-        entry.getValue().getConnection().sendUDP(new ShipPacketList(new ArrayList<>(shipsState.getShips().values())));
-      }
-      millisSinceLastPositionUpdate = 0;
+    millisSinceLastGameStateUpdate += Gdx.graphics.getDeltaTime() * 1000;
+    if (millisSinceLastGameStateUpdate >= GAME_STATE_TIME_FRAME) {
+      gameSnapshotBuffer.addState(GameSnapshot.fromGameState(gameState));
+      millisSinceLastGameStateUpdate = 0;
     }
+
+    gameSnapshotBuffer.getLatestSnapshotTime().ifPresent(lastSnapshotTime -> {
+      server.sendToAllUDP(gameSnapshotBuffer.getSnapshots().get(lastSnapshotTime)); // guaranteed to never be null
+    });
 
     stage.act();
     stage.draw();
@@ -90,7 +93,7 @@ public class SpaceHuntersServer extends ApplicationAdapter {
     return playerList;
   }
 
-  public ShipsState getShipsState() {
-    return shipsState;
+  public GameState getGameState() {
+    return gameState;
   }
 }

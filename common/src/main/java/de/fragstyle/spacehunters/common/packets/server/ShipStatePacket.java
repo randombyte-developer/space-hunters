@@ -2,8 +2,7 @@ package de.fragstyle.spacehunters.common.packets.server;
 
 import java.util.UUID;
 
-// TODO rename to 'ShipState'?
-public class ShipPacket {
+public class ShipStatePacket {
 
   private UUID uuid;
   private float x;
@@ -12,9 +11,9 @@ public class ShipPacket {
   private float xSpeed;
   private float ySpeed;
 
-  private ShipPacket() { }
+  private ShipStatePacket() { }
 
-  public ShipPacket(UUID uuid, float x, float y, float rotation, float xSpeed, float ySpeed) {
+  public ShipStatePacket(UUID uuid, float x, float y, float rotation, float xSpeed, float ySpeed) {
     this.uuid = uuid;
     this.x = x;
     this.y = y;

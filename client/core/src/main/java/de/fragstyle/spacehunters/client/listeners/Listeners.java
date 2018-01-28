@@ -8,6 +8,6 @@ public class Listeners {
   public static void registerListeners(SpaceHuntersClient spaceHuntersClient, EndPoint endPoint) {
     endPoint.addListener(new LoginAcceptedListener());
     endPoint.addListener(new DisconnectedListener());
-    endPoint.addListener(new PositionUpdateListener());
+    endPoint.addListener(new GameSnapshotListener(spaceHuntersClient.getGameSnapshotBuffer()));
   }
 }

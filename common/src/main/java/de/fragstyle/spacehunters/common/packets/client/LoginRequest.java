@@ -1,6 +1,6 @@
 package de.fragstyle.spacehunters.common.packets.client;
 
-import de.fragstyle.spacehunters.common.Player;
+import de.fragstyle.spacehunters.common.packets.server.Player;
 
 public class LoginRequest {
 

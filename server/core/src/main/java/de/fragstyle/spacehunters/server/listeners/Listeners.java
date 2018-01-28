@@ -2,7 +2,7 @@ package de.fragstyle.spacehunters.server.listeners;
 
 import com.esotericsoftware.kryonet.EndPoint;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
-import de.fragstyle.spacehunters.common.packets.server.ShipPacket;
+import de.fragstyle.spacehunters.common.packets.server.ShipStatePacket;
 import de.fragstyle.spacehunters.server.ServerPlayer;
 import de.fragstyle.spacehunters.server.SpaceHuntersServer;
 import java.util.Optional;
@@ -15,7 +15,7 @@ public class Listeners {
       @Override
       protected void newPlayer(ServerPlayer serverPlayer) {
         spaceHuntersServer.getPlayerList().add(serverPlayer);
-        spaceHuntersServer.getShipsState().addShip(new ShipPacket(serverPlayer.getUuid(), 0, 0, 0, 0, 0));
+        spaceHuntersServer.getGameState().addShip(new ShipStatePacket(serverPlayer.getUuid(), 0, 0, 0, 0, 0));
       }
     });
 
@@ -27,7 +27,7 @@ public class Listeners {
 
       @Override
       protected void receivedInputPacket(UUID playerUuid, InputPacket inputPacket) {
-        spaceHuntersServer.getShipsState().handleInputPacket(playerUuid, inputPacket);
+        spaceHuntersServer.getGameState().handleInputPacket(playerUuid, inputPacket);
       }
     });
   }

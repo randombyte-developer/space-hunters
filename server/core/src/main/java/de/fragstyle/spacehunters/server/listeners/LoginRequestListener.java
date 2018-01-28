@@ -2,7 +2,7 @@ package de.fragstyle.spacehunters.server.listeners;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import de.fragstyle.spacehunters.common.Player;
+import de.fragstyle.spacehunters.common.packets.server.Player;
 import de.fragstyle.spacehunters.common.packets.server.Disconnected;
 import de.fragstyle.spacehunters.common.packets.server.LoginAccepted;
 import de.fragstyle.spacehunters.common.packets.client.LoginRequest;

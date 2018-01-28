@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common;
+package de.fragstyle.spacehunters.common.packets.server;
 
 import java.util.UUID;
 

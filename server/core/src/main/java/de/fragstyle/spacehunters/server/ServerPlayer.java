@@ -1,7 +1,7 @@
 package de.fragstyle.spacehunters.server;
 
 import com.esotericsoftware.kryonet.Connection;
-import de.fragstyle.spacehunters.common.Player;
+import de.fragstyle.spacehunters.common.packets.server.Player;
 import java.util.UUID;
 
 public class ServerPlayer extends Player {

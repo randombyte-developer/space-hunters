@@ -14,17 +14,20 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.esotericsoftware.kryonet.Client;
 import de.fragstyle.spacehunters.client.listeners.Listeners;
 import de.fragstyle.spacehunters.common.KryoUtils;
-import de.fragstyle.spacehunters.common.Player;
-import de.fragstyle.spacehunters.common.ShipsState;
 import de.fragstyle.spacehunters.common.drawing.Frame;
 import de.fragstyle.spacehunters.common.drawing.Ship;
-import de.fragstyle.spacehunters.common.packets.client.LoginRequest;
+import de.fragstyle.spacehunters.common.packets.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
+import de.fragstyle.spacehunters.common.packets.client.LoginRequest;
+import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
+import de.fragstyle.spacehunters.common.packets.server.Player;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
 public class SpaceHuntersClient extends ApplicationAdapter {
+
+  private static final int DISPLAY_GAME_TIME_OFFSET = 100;
 
   private Stage stage;
   private OrthographicCamera camera;
@@ -33,7 +36,7 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
   private final Client client = new Client();
 
-  private final ShipsState shipsState = new ShipsState();
+  private final GameSnapshotBuffer gameSnapshotBuffer = new GameSnapshotBuffer();
 
   private AsyncExecutor asyncExecutor = new AsyncExecutor(3);
 
@@ -92,6 +95,15 @@ public class SpaceHuntersClient extends ApplicationAdapter {
       client.sendUDP(inputPacket);
     }
 
+    Optional<GameSnapshot> displaySnapshotTimeOpt = gameSnapshotBuffer
+        .getLatestSnapshotBeforeLimit(System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET);
+    displaySnapshotTimeOpt.ifPresent(gameSnapshot -> {
+      gameSnapshot.getShips().values().forEach(ship -> {
+        Gdx.app.log(TAG, ship.getX() + ";" + ship.getY());
+
+      });
+    });
+
     camera.update();
 
     stage.act(Gdx.graphics.getDeltaTime());
@@ -115,8 +127,9 @@ public class SpaceHuntersClient extends ApplicationAdapter {
 
   private void prepareAndStartClient() {
     KryoUtils.prepareKryo(client.getKryo());
-    Listeners.registerListeners(client);
+    Listeners.registerListeners(this, client);
     client.start();
+    client.setKeepAliveTCP(3000);
   }
 
   /**
@@ -178,5 +191,9 @@ public class SpaceHuntersClient extends ApplicationAdapter {
     if (Gdx.input.isKeyPressed(Keys.C)) {
       camera.rotate(1, 0, 0, 1);
     }
+  }
+
+  public GameSnapshotBuffer getGameSnapshotBuffer() {
+    return gameSnapshotBuffer;
   }
 }
