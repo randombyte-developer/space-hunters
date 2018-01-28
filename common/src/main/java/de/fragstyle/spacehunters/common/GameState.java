@@ -49,7 +49,7 @@ public class GameState {
     }
 
     ShipStatePacket ship = ships.get(shipUuid);
-    ship.setXSpeed(ship.getXSpeed() + (Constants.SHIP_ACCELERATION * inputPacket.getX()));
+    ship.setXSpeed(ship.getXSpeed() + (Constants.SHIP_ACCELERATION * inputPacket.getX())); // todo validate the input!!!
     ship.setYSpeed(ship.getYSpeed() + (Constants.SHIP_ACCELERATION * inputPacket.getY()));
   }
 

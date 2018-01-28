@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Server;
+import de.fragstyle.spacehunters.common.Constants;
 import de.fragstyle.spacehunters.common.GameState;
 import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.common.packets.GameSnapshotBuffer;
@@ -47,7 +48,7 @@ public class SpaceHuntersServer extends ApplicationAdapter {
 
     server.start();
     try {
-      server.bind(9880, 9881); // todo make configurable
+      server.bind(Constants.TCP_PORT, Constants.UDP_PORT);
     } catch (IOException e) {
       e.printStackTrace();
       Gdx.app.exit();

@@ -1,13 +1,13 @@
 package de.fragstyle.spacehunters.client.listeners;
 
 import com.esotericsoftware.kryonet.EndPoint;
-import de.fragstyle.spacehunters.client.SpaceHuntersClient;
+import de.fragstyle.spacehunters.client.SpaceHuntersClientGame;
 
 public class Listeners {
 
-  public static void registerListeners(SpaceHuntersClient spaceHuntersClient, EndPoint endPoint) {
+  public static void registerListeners(SpaceHuntersClientGame spaceHuntersClientGame, EndPoint endPoint) {
     endPoint.addListener(new LoginAcceptedListener());
     endPoint.addListener(new DisconnectedListener());
-    endPoint.addListener(new GameSnapshotListener(spaceHuntersClient.getGameSnapshotBuffer()));
+    endPoint.addListener(new GameSnapshotListener(spaceHuntersClientGame));
   }
 }
