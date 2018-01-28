@@ -15,7 +15,8 @@ public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
   public Gamefield(SimpleGame game) {
     super(game);
 
-    game.getCamera().zoom = 2;
+    game.getCamera().zoom = 3;
+    game.getCamera().position.set(0, 0, 0);
     game.getStage().setDebugAll(true);
 
     setupInitial();
@@ -28,9 +29,9 @@ public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
     Optional<GameSnapshot> displaySnapshotTimeOpt = gameSnapshotBuffer
         .getLatestSnapshotBeforeLimit(System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET);
     displaySnapshotTimeOpt.ifPresent(gameSnapshot -> {
+      Gdx.app.log("", String.valueOf(gameSnapshot.getShips().size()));
       gameSnapshot.getShips().values().forEach(ship -> {
-        Gdx.app.log("", ship.getX() + ";" + ship.getY());
-
+        getGame().getCamera().position.set(ship.getX(), ship.getY(), 0);
       });
     });
   }

@@ -8,10 +8,15 @@ import de.fragstyle.spacehunters.common.packets.server.LoginAccepted;
 import de.fragstyle.spacehunters.common.packets.client.LoginRequest;
 import de.fragstyle.spacehunters.server.PlayerList;
 import de.fragstyle.spacehunters.server.ServerPlayer;
+import java.util.UUID;
 
 public abstract class LoginRequestListener extends Listener {
 
   private final PlayerList playerList;
+
+  protected abstract void newPlayer(ServerPlayer serverPlayer);
+
+  protected abstract void removePlayer(UUID uuid);
 
   public LoginRequestListener(PlayerList playerList) {
     this.playerList = playerList;
@@ -19,7 +24,7 @@ public abstract class LoginRequestListener extends Listener {
 
   @Override
   public void disconnected(Connection connection) {
-    playerList.removeByKryoNetClientId(connection.getID());
+    playerList.getByKryoNetClientId(connection.getID()).ifPresent(this::removePlayer);
   }
 
   @Override
@@ -45,6 +50,4 @@ public abstract class LoginRequestListener extends Listener {
       connection.sendTCP(new LoginAccepted());
     }
   }
-
-  protected abstract void newPlayer(ServerPlayer serverPlayer);
 }

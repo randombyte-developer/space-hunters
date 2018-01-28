@@ -17,6 +17,12 @@ public class Listeners {
         spaceHuntersServer.getPlayerList().add(serverPlayer);
         spaceHuntersServer.getGameState().addShip(new ShipStatePacket(serverPlayer.getUuid(), 0, 0, 0, 0, 0));
       }
+
+      @Override
+      protected void removePlayer(UUID uuid) {
+        spaceHuntersServer.getPlayerList().remove(uuid);
+        spaceHuntersServer.getGameState().removeShip(uuid);
+      }
     });
 
     endPoint.addListener(new InputListener() {

@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class SpaceHuntersServer extends ApplicationAdapter {
 
-  private static final int GAME_STATE_TIME_FRAME = 100;
+  private static final int GAME_STATE_TIME_FRAME = 10;
 
   private final Server server = new Server();
   private final PlayerList playerList = new PlayerList();
