@@ -53,7 +53,7 @@ public class GameSnapshot extends GameState {
   }
 
   @Override
-  public void act() {
+  public void act(float deltaTime) {
     throw new UnsupportedOperationException(IMMUTABLE_ERROR);
   }
 }

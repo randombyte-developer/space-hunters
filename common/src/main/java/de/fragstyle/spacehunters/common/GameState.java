@@ -49,32 +49,46 @@ public class GameState {
     }
 
     ShipStatePacket ship = ships.get(shipUuid);
-    ship.setXSpeed(ship.getXSpeed() + (Constants.SHIP_ACCELERATION * inputPacket.getX())); // todo validate the input!!!
-    ship.setYSpeed(ship.getYSpeed() + (Constants.SHIP_ACCELERATION * inputPacket.getY()));
+    ship.setXAcceleration(Constants.SHIP_ACCELERATION * inputPacket.getX()); // todo validate the input!!!
+    ship.setYAcceleration(Constants.SHIP_ACCELERATION * inputPacket.getY()); // todo validate the input!!!
   }
 
   /**
    * Call this in the app's render() method @60 fps.
    */
-  // todo anti-cheat checks
-  public void act() {
-    fromGameSnapshot(getNextState());
+  public void act(float deltaTime) {
+    fromGameSnapshot(getNextState(deltaTime));
   }
 
   /**
-   * Called @60fps. Doesn't have any side-effects.
+   * Doesn't have any side-effects.
    */
-  public GameSnapshot getNextState() {
+  public GameSnapshot getNextState(float deltaTime) {
     Map<UUID, ShipStatePacket> newShips = ships.values()
         .stream()
         .map(ship -> {
-          float x = ship.getX() + ship.getXSpeed();
-          float y = ship.getY() + ship.getYSpeed();
+          float x = ship.getX() + (ship.getXSpeed() * deltaTime);
+          float y = ship.getY() + (ship.getYSpeed() * deltaTime);
 
-          float xSpeed = ship.getXSpeed() - ship.getXSpeed() * Constants.SHIP_FRICTION;
-          float ySpeed = ship.getYSpeed() - ship.getYSpeed() * Constants.SHIP_FRICTION;
+          float xFriction = ship.getXSpeed() == 0 ? 0 : (ship.getXSpeed() > 0 ? -Constants.SHIP_FRICTION : Constants.SHIP_FRICTION);
+          float yFriction = ship.getYSpeed() == 0 ? 0 : (ship.getYSpeed() > 0 ? -Constants.SHIP_FRICTION : Constants.SHIP_FRICTION);
 
-          return new ShipStatePacket(ship.getUuid(), x, y, ship.getRotation(), xSpeed, ySpeed);
+          float xSpeed = ship.getXSpeed() + ship.getXAcceleration() * deltaTime + xFriction * deltaTime;
+          float ySpeed = ship.getYSpeed() + ship.getYAcceleration() * deltaTime + yFriction * deltaTime;
+
+          // prevent strange small velocities
+          double a = 0.05;
+          if (-a < xSpeed && xSpeed < a) {
+            xSpeed = 0;
+          }
+          if (-a < ySpeed && ySpeed < a) {
+            ySpeed = 0;
+          }
+
+          Gdx.app.log("", xSpeed + ";" + ySpeed + "\t\t" + xFriction + ";" + yFriction);
+
+          return new ShipStatePacket(ship.getUuid(), x, y, ship.getRotation(), xSpeed, ySpeed,
+              ship.getXAcceleration(), ship.getYAcceleration());
         }).collect(Collectors.toMap(ShipStatePacket::getUuid, ship -> ship));
 
     return new GameSnapshot(newShips);
@@ -83,8 +97,9 @@ public class GameState {
   public void logAllShips() {
     for (Entry<UUID, ShipStatePacket> entry : ships.entrySet()) {
       ShipStatePacket ship = entry.getValue();
-      String output = "UUID: " + entry.getKey().toString() + "\n\tPos: " + ((int) ship.getX()) + ";" + ((int) ship.getY());
-      Gdx.app.log("", output);
+      //String output = "V: " + ((int) ship.getXSpeed()) + ";" + ((int) ship.getYSpeed());
+      String output = "A: " + ((int) ship.getXAcceleration()) + ";" + ((int) ship.getYAcceleration());
+      //Gdx.app.log("", output);
     }
   }
 }

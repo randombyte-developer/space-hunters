@@ -2,7 +2,6 @@ package de.fragstyle.spacehunters.common.drawing;
 
 import static de.fragstyle.spacehunters.common.Constants.DISPLAY_GAME_TIME_OFFSET;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import de.fragstyle.spacehunters.common.packets.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
@@ -29,7 +28,6 @@ public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
     Optional<GameSnapshot> displaySnapshotTimeOpt = gameSnapshotBuffer
         .getLatestSnapshotBeforeLimit(System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET);
     displaySnapshotTimeOpt.ifPresent(gameSnapshot -> {
-      Gdx.app.log("", String.valueOf(gameSnapshot.getShips().size()));
       gameSnapshot.getShips().values().forEach(ship -> {
         getGame().getCamera().position.set(ship.getX(), ship.getY(), 0);
       });

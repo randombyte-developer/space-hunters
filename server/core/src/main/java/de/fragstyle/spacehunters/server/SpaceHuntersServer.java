@@ -63,7 +63,7 @@ public class SpaceHuntersServer extends ApplicationAdapter {
 
     infoLabel.setText("Connected clients: " + server.getConnections().length);
 
-    gameState.act();
+    gameState.act(Gdx.graphics.getDeltaTime());
     gameState.logAllShips();
 
     millisSinceLastGameStateUpdate += Gdx.graphics.getDeltaTime() * 1000;
