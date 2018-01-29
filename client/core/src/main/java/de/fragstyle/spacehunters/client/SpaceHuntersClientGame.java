@@ -66,23 +66,23 @@ public class SpaceHuntersClientGame extends SimpleGame {
   }
 
   private InputPacket createInputPacket() {
-    short x = 0;
-    short y = 0;
+    short rotation = 0;
+    short acceleration = 0;
 
     if (Gdx.input.isKeyPressed(Keys.D)) {
-      x += 1;
+      rotation += 1;
     }
     if (Gdx.input.isKeyPressed(Keys.A)) {
-      x -= 1;
+      rotation -= 1;
     }
     if (Gdx.input.isKeyPressed(Keys.W)) {
-      y += 1;
+      acceleration += 1;
     }
     if (Gdx.input.isKeyPressed(Keys.S)) {
-      y -= 1;
+      acceleration -= 1;
     }
 
-    return new InputPacket(x, y);
+    return new InputPacket(acceleration, rotation);
   }
 
   /**

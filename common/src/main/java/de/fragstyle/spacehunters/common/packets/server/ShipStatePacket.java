@@ -8,23 +8,18 @@ public class ShipStatePacket {
   private float x;
   private float y;
   private float rotation;
-  private float xSpeed;
-  private float ySpeed;
-  private float xAcceleration;
-  private float yAcceleration;
+  private float speed;
+  private float acceleration;
 
   private ShipStatePacket() { }
 
-  public ShipStatePacket(UUID uuid, float x, float y, float rotation, float xSpeed, float ySpeed,
-      float xAcceleration, float yAcceleration) {
+  public ShipStatePacket(UUID uuid, float x, float y, float rotation, float speed, float acceleration) {
     this.uuid = uuid;
     this.x = x;
     this.y = y;
     this.rotation = rotation;
-    this.xSpeed = xSpeed;
-    this.ySpeed = ySpeed;
-    this.xAcceleration = xAcceleration;
-    this.yAcceleration = yAcceleration;
+    this.speed = speed;
+    this.acceleration = acceleration;
   }
 
   public UUID getUuid() {
@@ -55,35 +50,19 @@ public class ShipStatePacket {
     this.rotation = rotation;
   }
 
-  public float getXSpeed() {
-    return xSpeed;
+  public float getSpeed() {
+    return speed;
   }
 
-  public void setXSpeed(float xSpeed) {
-    this.xSpeed = xSpeed;
+  public void setSpeed(float speed) {
+    this.speed = speed;
   }
 
-  public float getYSpeed() {
-    return ySpeed;
+  public float getAcceleration() {
+    return acceleration;
   }
 
-  public void setYSpeed(float ySpeed) {
-    this.ySpeed = ySpeed;
-  }
-
-  public float getXAcceleration() {
-    return xAcceleration;
-  }
-
-  public void setXAcceleration(float xAcceleration) {
-    this.xAcceleration = xAcceleration;
-  }
-
-  public float getYAcceleration() {
-    return yAcceleration;
-  }
-
-  public void setYAcceleration(float yAcceleration) {
-    this.yAcceleration = yAcceleration;
+  public void setAcceleration(float acceleration) {
+    this.acceleration = acceleration;
   }
 }

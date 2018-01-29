@@ -2,21 +2,21 @@ package de.fragstyle.spacehunters.common.packets.client;
 
 public class InputPacket {
 
-  private short x;
-  private short y;
+  private short acceleration;
+  private short rotation;
 
   private InputPacket() { }
 
-  public InputPacket(short x, short y) {
-    this.x = x;
-    this.y = y;
+  public InputPacket(short acceleration, short rotation) {
+    this.acceleration = acceleration;
+    this.rotation = rotation;
   }
 
-  public short getX() {
-    return x;
+  public short getAcceleration() {
+    return acceleration;
   }
 
-  public short getY() {
-    return y;
+  public short getRotation() {
+    return rotation;
   }
 }

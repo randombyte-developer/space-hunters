@@ -1,6 +1,7 @@
 package de.fragstyle.spacehunters.common;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.MathUtils;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
 import de.fragstyle.spacehunters.common.packets.server.ShipStatePacket;
@@ -49,8 +50,12 @@ public class GameState {
     }
 
     ShipStatePacket ship = ships.get(shipUuid);
-    ship.setXAcceleration(Constants.SHIP_ACCELERATION * inputPacket.getX()); // todo validate the input!!!
-    ship.setYAcceleration(Constants.SHIP_ACCELERATION * inputPacket.getY()); // todo validate the input!!!
+
+    int accelerationInput = MathUtils.clamp(inputPacket.getAcceleration(), -1, 1);
+    int rotationInput = MathUtils.clamp(inputPacket.getRotation(), -1, 1);
+
+    ship.setAcceleration(Constants.SHIP_ACCELERATION * accelerationInput);
+    ship.setRotation(ship.getRotation() + Constants.SHIP_ROTATION * rotationInput);
   }
 
   /**
@@ -67,28 +72,22 @@ public class GameState {
     Map<UUID, ShipStatePacket> newShips = ships.values()
         .stream()
         .map(ship -> {
-          float x = ship.getX() + (ship.getXSpeed() * deltaTime);
-          float y = ship.getY() + (ship.getYSpeed() * deltaTime);
 
-          float xFriction = ship.getXSpeed() == 0 ? 0 : (ship.getXSpeed() > 0 ? -Constants.SHIP_FRICTION : Constants.SHIP_FRICTION);
-          float yFriction = ship.getYSpeed() == 0 ? 0 : (ship.getYSpeed() > 0 ? -Constants.SHIP_FRICTION : Constants.SHIP_FRICTION);
-
-          float xSpeed = ship.getXSpeed() + ship.getXAcceleration() * deltaTime + xFriction * deltaTime;
-          float ySpeed = ship.getYSpeed() + ship.getYAcceleration() * deltaTime + yFriction * deltaTime;
+          float friction = ship.getSpeed() == 0 ? 0 : (ship.getSpeed() > 0 ? -Constants.SHIP_FRICTION : Constants.SHIP_FRICTION);
+          float speed = ship.getSpeed() + (ship.getAcceleration() + friction) * deltaTime;
 
           // prevent strange small velocities
-          double a = 0.05;
-          if (-a < xSpeed && xSpeed < a) {
-            xSpeed = 0;
-          }
-          if (-a < ySpeed && ySpeed < a) {
-            ySpeed = 0;
+          double minSpeed = 0.05;
+          if (-minSpeed < speed && speed < minSpeed) {
+            speed = 0;
           }
 
-          Gdx.app.log("", xSpeed + ";" + ySpeed + "\t\t" + xFriction + ";" + yFriction);
+          float x = ship.getX() + MathUtils.sinDeg(ship.getRotation()) * ship.getSpeed() * deltaTime;
+          float y = ship.getY() + MathUtils.cosDeg(ship.getRotation()) * ship.getSpeed() * deltaTime;
 
-          return new ShipStatePacket(ship.getUuid(), x, y, ship.getRotation(), xSpeed, ySpeed,
-              ship.getXAcceleration(), ship.getYAcceleration());
+          Gdx.app.log("", speed + ";" + friction);
+
+          return new ShipStatePacket(ship.getUuid(), x, y, ship.getRotation(), speed, ship.getAcceleration());
         }).collect(Collectors.toMap(ShipStatePacket::getUuid, ship -> ship));
 
     return new GameSnapshot(newShips);
@@ -98,7 +97,7 @@ public class GameState {
     for (Entry<UUID, ShipStatePacket> entry : ships.entrySet()) {
       ShipStatePacket ship = entry.getValue();
       //String output = "V: " + ((int) ship.getXSpeed()) + ";" + ((int) ship.getYSpeed());
-      String output = "A: " + ((int) ship.getXAcceleration()) + ";" + ((int) ship.getYAcceleration());
+      //String output = "A: " + ((int) ship.getXAcceleration()) + ";" + ((int) ship.getYAcceleration());
       //Gdx.app.log("", output);
     }
   }

@@ -7,5 +7,6 @@ public class Constants {
   public static final int DISPLAY_GAME_TIME_OFFSET = 100;
 
   public static final float SHIP_ACCELERATION = 30;
-  public static final float SHIP_FRICTION = 2;
+  public static final float SHIP_FRICTION = 10;
+  public static final float SHIP_ROTATION = 3;
 }
