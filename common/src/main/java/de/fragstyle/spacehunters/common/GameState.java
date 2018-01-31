@@ -82,8 +82,8 @@ public class GameState {
             speed = 0;
           }
 
-          float x = ship.getX() + MathUtils.sinDeg(ship.getRotation()) * ship.getSpeed() * deltaTime;
-          float y = ship.getY() + MathUtils.cosDeg(ship.getRotation()) * ship.getSpeed() * deltaTime;
+          float x = ship.getX() + MathUtils.cosDeg(ship.getRotation()) * ship.getSpeed() * deltaTime;
+          float y = ship.getY() + MathUtils.sinDeg(ship.getRotation()) * ship.getSpeed() * deltaTime;
 
           Gdx.app.log("", speed + ";" + friction);
 

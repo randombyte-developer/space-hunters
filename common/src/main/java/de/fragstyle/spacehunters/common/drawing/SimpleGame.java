@@ -40,6 +40,11 @@ public class SimpleGame extends Game {
     stage.dispose();
   }
 
+  public void newStage() {
+    // todo does this work?
+    stage = new Stage(viewport);
+  }
+
   public Stage getStage() {
     return stage;
   }

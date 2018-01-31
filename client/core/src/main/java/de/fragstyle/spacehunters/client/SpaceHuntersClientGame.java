@@ -32,7 +32,8 @@ public class SpaceHuntersClientGame extends SimpleGame {
       protected void successfullyConnected() {
         gamefield = new Gamefield(SpaceHuntersClientGame.this);
         setScreen(gamefield);
-        //joinServerScreen.dispose();
+        newStage(); // todo does this work?
+        //joinServerScreen.dispose(); todo make this work
       }
     };
     setScreen(joinServerScreen);
@@ -70,10 +71,10 @@ public class SpaceHuntersClientGame extends SimpleGame {
     short acceleration = 0;
 
     if (Gdx.input.isKeyPressed(Keys.D)) {
-      rotation += 1;
+      rotation -= 1;
     }
     if (Gdx.input.isKeyPressed(Keys.A)) {
-      rotation -= 1;
+      rotation += 1;
     }
     if (Gdx.input.isKeyPressed(Keys.W)) {
       acceleration += 1;
