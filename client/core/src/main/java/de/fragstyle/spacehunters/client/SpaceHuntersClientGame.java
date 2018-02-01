@@ -30,9 +30,9 @@ public class SpaceHuntersClientGame extends SimpleGame {
     JoinServerScreen joinServerScreen = new JoinServerScreen(this) {
       @Override
       protected void successfullyConnected() {
+        newStage();
         gamefield = new Gamefield(SpaceHuntersClientGame.this);
         setScreen(gamefield);
-        newStage(); // todo does this work?
         //joinServerScreen.dispose(); todo make this work
       }
     };
