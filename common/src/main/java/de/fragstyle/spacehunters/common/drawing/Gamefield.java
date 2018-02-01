@@ -18,7 +18,7 @@ public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
   public Gamefield(SimpleGame game) {
     super(game);
 
-    game.getCamera().zoom = 3;
+    game.getCamera().zoom = 1.5f;
     game.getCamera().position.set(0, 0, 0);
     game.getStage().setDebugAll(true);
 

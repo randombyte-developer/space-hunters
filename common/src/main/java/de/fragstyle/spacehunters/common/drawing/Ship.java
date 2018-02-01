@@ -22,7 +22,16 @@ public class Ship extends BetterActor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(texture, getX(), getY());
+        // wtf, I just want to change the rotation
+        batch.draw(texture,
+            getX(), getY(),
+            texture.getWidth() / 2, texture.getHeight() / 2,
+            texture.getWidth(), texture.getHeight(),
+            1, 1,
+            getRotation(),
+            0, 0,
+            texture.getWidth(), texture.getHeight(),
+            false, false);
     }
 
     @Override
