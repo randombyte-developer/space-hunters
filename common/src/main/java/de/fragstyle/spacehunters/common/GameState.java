@@ -1,6 +1,5 @@
 package de.fragstyle.spacehunters.common;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
@@ -54,8 +53,11 @@ public class GameState {
     int accelerationInput = MathUtils.clamp(inputPacket.getAcceleration(), -1, 1);
     int rotationInput = MathUtils.clamp(inputPacket.getRotation(), -1, 1);
 
-    ship.setAcceleration(Constants.SHIP_ACCELERATION * accelerationInput);
-    ship.setRotation(ship.getRotation() + Constants.SHIP_ROTATION * rotationInput);
+    ship.setAcceleration(Constants.ACCELERATION * accelerationInput);
+
+    if (rotationInput != 0) {
+      ship.setRotationSpeed(Constants.MAXIMAL_ABSOLUTE_ROTATION_SPEED * rotationInput);
+    }
   }
 
   /**
@@ -73,21 +75,52 @@ public class GameState {
         .stream()
         .map(ship -> {
 
-          float friction = ship.getSpeed() == 0 ? 0 : (ship.getSpeed() > 0 ? -Constants.SHIP_FRICTION : Constants.SHIP_FRICTION);
-          float speed = ship.getSpeed() + (ship.getAcceleration() + friction) * deltaTime;
+          // == ROTATION ==
 
-          // prevent strange small velocities
-          double minSpeed = 0.05;
-          if (-minSpeed < speed && speed < minSpeed) {
-            speed = 0;
+          float rotSpeed = ship.getRotationSpeed();
+
+          // prevent strange small rotation speeds
+          if (-Constants.MINIMAL_ABSOLUTE_ROTATION_SPEED < rotSpeed && rotSpeed< Constants.MINIMAL_ABSOLUTE_ROTATION_SPEED) {
+            rotSpeed = 0;
           }
 
-          float x = ship.getX() + MathUtils.cosDeg(ship.getRotation()) * ship.getSpeed() * deltaTime;
-          float y = ship.getY() + MathUtils.sinDeg(ship.getRotation()) * ship.getSpeed() * deltaTime;
+          float rotation = ship.getRotation() + rotSpeed * deltaTime;
 
-          Gdx.app.log("", speed + ";" + friction);
+          float rotationFriction = rotSpeed == 0 ? 0 : (rotSpeed > 0 ? -Constants.ROTATION_FRICTION : Constants.ROTATION_FRICTION);
+          rotSpeed = rotSpeed + rotationFriction * deltaTime;
 
-          return new ShipStatePacket(ship.getUuid(), x, y, ship.getRotation(), speed, ship.getAcceleration());
+          // == MOVEMENT ==
+
+          float xAcceleration = MathUtils.cosDeg(rotation) * ship.getAcceleration();
+          float yAcceleration = MathUtils.sinDeg(rotation) * ship.getAcceleration();
+
+          float xSpeed = ship.getXSpeed() + xAcceleration * deltaTime;
+          float ySpeed = ship.getYSpeed() + yAcceleration * deltaTime;
+
+          if (xAcceleration == 0) {
+            float xFriction = xSpeed == 0 ? 0 : (xSpeed > 0 ? -Constants.FRICTION : Constants.FRICTION);
+            xSpeed = xSpeed + xFriction * deltaTime;
+          }
+          if (yAcceleration == 0) {
+            float yFriction = ySpeed == 0 ? 0 : (ySpeed > 0 ? -Constants.FRICTION : Constants.FRICTION);
+            ySpeed = ySpeed + yFriction * deltaTime;
+          }
+
+          xSpeed = MathUtils.clamp(xSpeed, -Constants.MAXIMAL_ABSOLUTE_SPEED, Constants.MAXIMAL_ABSOLUTE_SPEED);
+          ySpeed = MathUtils.clamp(ySpeed, -Constants.MAXIMAL_ABSOLUTE_SPEED, Constants.MAXIMAL_ABSOLUTE_SPEED);
+
+          // prevent strange small velocities
+          if (-Constants.MINIMAL_ABSOLUTE_SPEED < xSpeed && xSpeed< Constants.MINIMAL_ABSOLUTE_SPEED) {
+            xSpeed = 0;
+          }
+          if (-Constants.MINIMAL_ABSOLUTE_SPEED < ySpeed && ySpeed< Constants.MINIMAL_ABSOLUTE_SPEED) {
+            ySpeed = 0;
+          }
+
+          float x = ship.getX() + xSpeed * deltaTime;
+          float y = ship.getY() + ySpeed * deltaTime;
+
+          return new ShipStatePacket(ship.getUuid(), x, y, rotation, rotSpeed, xSpeed, ySpeed, ship.getAcceleration());
         }).collect(Collectors.toMap(ShipStatePacket::getUuid, ship -> ship));
 
     return new GameSnapshot(newShips);

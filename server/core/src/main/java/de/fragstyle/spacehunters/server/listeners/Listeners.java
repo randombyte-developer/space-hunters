@@ -16,7 +16,7 @@ public class Listeners {
       protected void newPlayer(ServerPlayer serverPlayer) {
         spaceHuntersServer.getPlayerList().add(serverPlayer);
         spaceHuntersServer.getGameState().addShip(new ShipStatePacket(serverPlayer.getUuid(), 0, 0, 90,
-            0, 0));
+            0, 0, 0, 0));
       }
 
       @Override

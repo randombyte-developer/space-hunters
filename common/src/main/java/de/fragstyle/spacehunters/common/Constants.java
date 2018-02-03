@@ -6,7 +6,12 @@ public class Constants {
 
   public static final int DISPLAY_GAME_TIME_OFFSET = 100;
 
-  public static final float SHIP_ACCELERATION = 30;
-  public static final float SHIP_FRICTION = 10;
-  public static final float SHIP_ROTATION = 3;
+  public static final float ACCELERATION = 550;
+  public static final float MAXIMAL_ABSOLUTE_SPEED = 500;
+  public static final float MINIMAL_ABSOLUTE_SPEED = 0.05f;
+  public static final float FRICTION = 150;
+
+  public static final float MAXIMAL_ABSOLUTE_ROTATION_SPEED = 160;
+  public static final float MINIMAL_ABSOLUTE_ROTATION_SPEED = 0.05f;
+  public static final float ROTATION_FRICTION = 350;
 }

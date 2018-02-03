@@ -23,12 +23,16 @@ public class GameSnapshotBuffer {
     return snapshots;
   }
 
-  public Optional<Long> getNextSnapshotTimeAfter(long snapshotTime) {
-    List<Long> nextSnapshotTimes = snapshots.keySet()
+  public List<Long> getSnapshotTimesAfter(long snapshotTime) {
+    return snapshots.keySet()
         .stream()
         .filter(time -> time > snapshotTime)
         .sorted()
         .collect(Collectors.toList());
+  }
+
+  public Optional<Long> getNextSnapshotTimeAfter(long snapshotTime) {
+    List<Long> nextSnapshotTimes = getSnapshotTimesAfter(snapshotTime);
 
     if (nextSnapshotTimes.isEmpty()) {
       return Optional.empty();
@@ -40,6 +44,13 @@ public class GameSnapshotBuffer {
 
   public Optional<GameSnapshot> getNextSnapshotAfter(long snapshotTime) {
     return getNextSnapshotTimeAfter(snapshotTime).map(snapshots::get);
+  }
+
+  public List<GameSnapshot> getSnapshotsAfter(long snapshotTime) {
+    return getSnapshotTimesAfter(snapshotTime)
+        .stream()
+        .map(snapshots::get)
+        .collect(Collectors.toList());
   }
 
   public Optional<Long> getLatestSnapshotTime() {

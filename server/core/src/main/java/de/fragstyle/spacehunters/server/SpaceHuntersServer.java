@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class SpaceHuntersServer extends ApplicationAdapter {
 
-  private static final int GAME_STATE_TIME_FRAME = 10;
+  private static final int GAME_STATE_TIME_FRAME = 1; // how often a snapshot of the current game state is taken
 
   private final Server server = new Server();
   private final PlayerList playerList = new PlayerList();
@@ -30,7 +30,7 @@ public class SpaceHuntersServer extends ApplicationAdapter {
   private final GameSnapshotBuffer gameSnapshotBuffer = new GameSnapshotBuffer();
   private final GameState gameState = new GameState();
 
-  private int millisSinceLastGameStateUpdate = 0;
+  private int millisSinceLastGameStateSnapshot = 0;
 
   public static final String TAG = "SpaceHuntersServer";
 
@@ -66,10 +66,11 @@ public class SpaceHuntersServer extends ApplicationAdapter {
     gameState.act(Gdx.graphics.getDeltaTime());
     gameState.logAllShips();
 
-    millisSinceLastGameStateUpdate += Gdx.graphics.getDeltaTime() * 1000;
-    if (millisSinceLastGameStateUpdate >= GAME_STATE_TIME_FRAME) {
+    millisSinceLastGameStateSnapshot += Gdx.graphics.getDeltaTime() * 1000;
+    if (millisSinceLastGameStateSnapshot >= GAME_STATE_TIME_FRAME) {
       gameSnapshotBuffer.addState(GameSnapshot.fromGameState(gameState));
-      millisSinceLastGameStateUpdate = 0;
+
+      millisSinceLastGameStateSnapshot = 0;
     }
 
     gameSnapshotBuffer.getLatestSnapshotTime().ifPresent(lastSnapshotTime -> {
