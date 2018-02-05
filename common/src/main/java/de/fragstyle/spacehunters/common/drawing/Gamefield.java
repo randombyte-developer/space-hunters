@@ -29,9 +29,9 @@ public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
   public void render(float delta) {
     super.render(delta);
 
-    Map<UUID, Ship> ships = Arrays.stream(getGame().getStage().getActors().items)
-        .filter(actor -> actor instanceof Ship)
-        .map(actor -> (Ship) actor)
+    Map<UUID, OldShip> ships = Arrays.stream(getGame().getStage().getActors().items)
+        .filter(actor -> actor instanceof OldShip)
+        .map(actor -> (OldShip) actor)
         .collect(Collectors.toMap(ship -> ship.getState().getUuid(), ship -> ship));
 
     long limit = System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET;
@@ -39,7 +39,7 @@ public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
     displaySnapshotTimeOpt.ifPresent(gameSnapshot -> {
       gameSnapshot.getShips().values().forEach(ship -> {
         if (!ships.containsKey(ship.getUuid())) {
-          getGame().getStage().addActor(new Ship(ship));
+          getGame().getStage().addActor(new OldShip(ship));
         } else {
           ships.get(ship.getUuid()).setState(ship);
         }

@@ -5,13 +5,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import de.fragstyle.spacehunters.common.packets.server.ShipStatePacket;
 
-public class Ship extends BetterActor {
+public class OldShip extends BetterActor {
 
     private ShipStatePacket state;
 
     private Texture texture = new Texture(Gdx.files.internal("ship.png"));
 
-    public Ship(ShipStatePacket shipStatePacket) {
+    public OldShip(ShipStatePacket shipStatePacket) {
         this.state = shipStatePacket;
         setSize(texture.getWidth(), texture.getHeight());
         setOrigin(getWidth() / 2, getHeight() / 2);
