@@ -1,6 +1,9 @@
 package de.fragstyle.spacehunters.common;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.World;
+import de.fragstyle.spacehunters.common.models.ship.Ship;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
 import de.fragstyle.spacehunters.common.packets.server.ShipStatePacket;
@@ -17,13 +20,17 @@ import java.util.stream.Collectors;
  */
 public class GameState {
 
-  private Map<UUID, ShipStatePacket> ships;
+  private World world;
+  private Map<UUID, InputPacket> lastInputs;
+  private Map<UUID, Ship> ships;
+  private int accumulator = 0;
 
   public GameState() {
-    this(new HashMap<>());
+    this(new World(Vector2.Zero, false), new HashMap<>());
   }
 
-  public GameState(Map<UUID, ShipStatePacket> ships) {
+  public GameState(World world, Map<UUID, Ship> ships) {
+    this.world = world;
     this.ships = ships;
   }
 
@@ -31,11 +38,11 @@ public class GameState {
     ships = gameSnapshot.getShips();
   }
 
-  public void addShip(ShipStatePacket ship) {
+  public void addShip(Ship ship) {
     ships.put(ship.getUuid(), ship);
   }
 
-  public Map<UUID, ShipStatePacket> getShips() {
+  public Map<UUID, Ship> getShips() {
     return ships;
   }
 
@@ -48,12 +55,13 @@ public class GameState {
       throw new IllegalArgumentException("Ship with UUID '" + shipUuid.toString() + "' not found!");
     }
 
-    ShipStatePacket ship = ships.get(shipUuid);
+    Ship ship = ships.get(shipUuid);
 
     int accelerationInput = MathUtils.clamp(inputPacket.getAcceleration(), -1, 1);
     int rotationInput = MathUtils.clamp(inputPacket.getRotation(), -1, 1);
 
-    ship.setAcceleration(Constants.ACCELERATION * accelerationInput);
+    ship.getBody().applyForce(new Vector2(1, 0), new Vector2(ship.getBody()));
+    Constants.ACCELERATION * accelerationInput);
 
     if (rotationInput != 0) {
       ship.setRotationSpeed(Constants.MAXIMAL_ABSOLUTE_ROTATION_SPEED * rotationInput);
@@ -64,6 +72,12 @@ public class GameState {
    * Call this in the app's render() method @60 fps.
    */
   public void act(float deltaTime) {
+    float frameTime = Math.min(deltaTime, 0.25f);
+    accumulator += frameTime;
+    while (accumulator >= Constants.STEP_TIME) {
+      world.step(Constants.STEP_TIME, Constants.VELOCITY_ITERATIONS, Constants.POSITION_ITERATIONS);
+      accumulator -= Constants.STEP_TIME;
+    }
     fromGameSnapshot(getNextState(deltaTime));
   }
 

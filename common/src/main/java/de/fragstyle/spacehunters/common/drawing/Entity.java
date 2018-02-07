@@ -1,6 +1,7 @@
 package de.fragstyle.spacehunters.common.drawing;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import java.util.UUID;
 public class Entity {
   private final UUID uuid;
   private Body body;
+  private Vector2 origin;
   private final World world;
 
   protected Entity(UUID uuid, World world) {

@@ -20,7 +20,7 @@ public class GameSnapshot extends GameState {
   }
 
   public GameSnapshot(Map<UUID, ShipStatePacket> ships) {
-    super(ships);
+    super(world, ships);
     this.time = System.currentTimeMillis(); // todo bad?
   }
 
