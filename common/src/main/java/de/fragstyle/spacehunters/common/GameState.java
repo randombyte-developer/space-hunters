@@ -55,17 +55,7 @@ public class GameState {
       throw new IllegalArgumentException("Ship with UUID '" + shipUuid.toString() + "' not found!");
     }
 
-    Ship ship = ships.get(shipUuid);
-
-    int accelerationInput = MathUtils.clamp(inputPacket.getAcceleration(), -1, 1);
-    int rotationInput = MathUtils.clamp(inputPacket.getRotation(), -1, 1);
-
-    ship.getBody().applyForce(new Vector2(1, 0), new Vector2(ship.getBody()));
-    Constants.ACCELERATION * accelerationInput);
-
-    if (rotationInput != 0) {
-      ship.setRotationSpeed(Constants.MAXIMAL_ABSOLUTE_ROTATION_SPEED * rotationInput);
-    }
+    lastInputs.put(shipUuid, inputPacket.clamp());
   }
 
   /**
@@ -75,23 +65,25 @@ public class GameState {
     float frameTime = Math.min(deltaTime, 0.25f);
     accumulator += frameTime;
     while (accumulator >= Constants.STEP_TIME) {
+      actInputs(Constants.STEP_TIME);
       world.step(Constants.STEP_TIME, Constants.VELOCITY_ITERATIONS, Constants.POSITION_ITERATIONS);
       accumulator -= Constants.STEP_TIME;
     }
-    fromGameSnapshot(getNextState(deltaTime));
   }
 
-  /**
-   * Doesn't have any side-effects.
-   */
-  public GameSnapshot getNextState(float deltaTime) {
-    Map<UUID, ShipStatePacket> newShips = ships.values()
-        .stream()
-        .map(ship -> {
+  private void actInputs(float deltaTime) {
+    for (Entry<UUID, Ship> entry : ships.entrySet()) {
 
-          // == ROTATION ==
+        UUID uuid = entry.getKey();
+        Ship ship = entry.getValue();
 
-          float rotSpeed = ship.getRotationSpeed();
+        // == SHIP ==
+
+        ship.getBody().applyForce(new Vector2(1, 0), ship.getOrigin(), true);
+
+        // == ROTATION ==
+
+          /*float rotSpeed = ship.getRotationSpeed();
 
           // prevent strange small rotation speeds
           if (-Constants.MINIMAL_ABSOLUTE_ROTATION_SPEED < rotSpeed && rotSpeed< Constants.MINIMAL_ABSOLUTE_ROTATION_SPEED) {
@@ -132,12 +124,10 @@ public class GameState {
           }
 
           float x = ship.getX() + xSpeed * deltaTime;
-          float y = ship.getY() + ySpeed * deltaTime;
+          float y = ship.getY() + ySpeed * deltaTime;*/
 
-          return new ShipStatePacket(ship.getUuid(), x, y, rotation, rotSpeed, xSpeed, ySpeed, ship.getAcceleration());
-        }).collect(Collectors.toMap(ShipStatePacket::getUuid, ship -> ship));
-
-    return new GameSnapshot(newShips);
+        //return new ShipStatePacket(ship.getUuid(), x, y, rotation, rotSpeed, xSpeed, ySpeed, ship.getAcceleration());
+    }
   }
 
   public void logAllShips() {

@@ -44,17 +44,20 @@ public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
   public void render(float delta) {
     super.render(delta);
 
-    Map<UUID, OldShip> ships = Arrays.stream(getGame().getStage().getActors().items)
-        .filter(actor -> actor instanceof OldShip)
-        .map(actor -> (OldShip) actor)
+    Map<UUID, ShipActor> shipActors = Arrays.stream(getGame().getStage().getActors().items)
+        .filter(actor -> actor instanceof ShipActor)
+        .map(actor -> (ShipActor) actor)
         .collect(Collectors.toMap(ship -> ship.getState().getUuid(), ship -> ship));
 
     long limit = System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET;
     Optional<GameSnapshot> displaySnapshotTimeOpt = gameSnapshotBuffer.getLatestSnapshotBeforeLimit(limit);
     displaySnapshotTimeOpt.ifPresent(gameSnapshot -> {
-      gameSnapshot.getShips().values().forEach(ship -> {
-        if (!ships.containsKey(ship.getUuid())) {
-          // getGame().getStage().addActor(new OldShip(ship));
+      Map<UUID, EntityState> ships = gameSnapshot.getShips();
+      ships.entrySet().forEach(entry -> {
+        UUID uuid = entry.getKey();
+        EntityState state = entry.getValue();
+        if (!shipActors.containsKey(uuid)) {
+          // getGame().getStage().addActor(new ShipActor(ship));
           entities.put(ship.getUuid(), new Ship(ship.getUuid(), world));
         } else {
           ships.get(ship.getUuid()).setState(ship);

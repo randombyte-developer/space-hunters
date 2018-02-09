@@ -33,6 +33,14 @@ public class Entity {
     this.body = body;
   }
 
+  public Vector2 getOrigin() {
+    return origin;
+  }
+
+  protected void setOrigin(Vector2 origin) {
+    this.origin = origin;
+  }
+
   public World getWorld() {
     return world;
   }

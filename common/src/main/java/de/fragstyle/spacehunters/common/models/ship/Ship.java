@@ -12,6 +12,8 @@ import java.util.UUID;
 
 public class Ship extends Entity {
 
+  private static final String ID = "ship";
+
   public Ship(UUID uuid, World world) {
     super(uuid, world);
 
@@ -30,8 +32,9 @@ public class Ship extends Entity {
     fixtureDef.friction = 0.5f;
     fixtureDef.restitution = 0.3f;
 
-    loader.attachFixture(body, "ship", fixtureDef, 1);
+    loader.attachFixture(body, ID, fixtureDef, 1);
 
     this.setBody(body);
+    this.setOrigin(loader.getOrigin(ID, 1));
   }
 }

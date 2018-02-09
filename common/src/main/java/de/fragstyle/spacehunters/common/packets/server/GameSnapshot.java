@@ -1,59 +1,39 @@
 package de.fragstyle.spacehunters.common.packets.server;
 
 import de.fragstyle.spacehunters.common.GameState;
-import de.fragstyle.spacehunters.common.packets.client.InputPacket;
+import de.fragstyle.spacehunters.common.drawing.EntityState;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-/**
- * The immutable variant of {@link GameState}.
- */
-public class GameSnapshot extends GameState {
-
-  private static final String IMMUTABLE_ERROR = "This GameSnapshot is immutable!";
+public class GameSnapshot {
 
   private final long time;
+  private final Map<UUID, EntityState> ships;
 
   private GameSnapshot() {
     this(new HashMap<>());
   }
 
-  public GameSnapshot(Map<UUID, ShipStatePacket> ships) {
-    super(world, ships);
+  public GameSnapshot(Map<UUID, EntityState> ships) {
     this.time = System.currentTimeMillis(); // todo bad?
+    this.ships = ships;
   }
 
   public long getTime() {
     return time;
   }
 
+  public Map<UUID, EntityState> getShips() {
+    return ships;
+  }
+
   public static GameSnapshot fromGameState(GameState gameState) {
-    return new GameSnapshot(gameState.getShips());
-  }
+    Map<UUID, EntityState> shipStates = gameState.getShips().entrySet()
+            .stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getState()));
 
-  @Override
-  public void fromGameSnapshot(GameSnapshot gameSnapshot) {
-    throw new UnsupportedOperationException(IMMUTABLE_ERROR);
-  }
-
-  @Override
-  public void addShip(ShipStatePacket ship) {
-    throw new UnsupportedOperationException(IMMUTABLE_ERROR);
-  }
-
-  @Override
-  public void removeShip(UUID uuid) {
-    throw new UnsupportedOperationException(IMMUTABLE_ERROR);
-  }
-
-  @Override
-  public void handleInputPacket(UUID shipUuid, InputPacket inputPacket) {
-    throw new UnsupportedOperationException(IMMUTABLE_ERROR);
-  }
-
-  @Override
-  public void act(float deltaTime) {
-    throw new UnsupportedOperationException(IMMUTABLE_ERROR);
+    return new GameSnapshot(shipStates);
   }
 }
