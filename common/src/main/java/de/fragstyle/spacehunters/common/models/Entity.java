@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.drawing;
+package de.fragstyle.spacehunters.common.models;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;

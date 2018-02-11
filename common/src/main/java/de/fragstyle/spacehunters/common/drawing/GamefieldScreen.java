@@ -7,14 +7,17 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import de.fragstyle.spacehunters.common.models.ship.Ship;
+import de.fragstyle.spacehunters.common.models.ship.ShipState;
 import de.fragstyle.spacehunters.common.packets.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
 
+import de.fragstyle.spacehunters.common.packets.server.Player;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
+public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
+
+  private final Player self;
 
   private final GameSnapshotBuffer gameSnapshotBuffer = new GameSnapshotBuffer();
   private final World world;
@@ -22,10 +25,11 @@ public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
   Matrix4 debugMatrix;
   Box2DDebugRenderer debugRenderer;
 
-  private final Map<UUID, Entity> entities = new HashMap<>();
+  private final Map<UUID, ShipActor> shipActors = new HashMap<>();
 
-  public Gamefield(SimpleGame game) {
+  public GamefieldScreen(SimpleGame game, Player self) {
     super(game);
+    this.self = self;
 
     world = new World(Vector2.Zero, false);
 
@@ -47,22 +51,26 @@ public class Gamefield extends GameAwareScreenAdapter<SimpleGame> {
     Map<UUID, ShipActor> shipActors = Arrays.stream(getGame().getStage().getActors().items)
         .filter(actor -> actor instanceof ShipActor)
         .map(actor -> (ShipActor) actor)
-        .collect(Collectors.toMap(ship -> ship.getState().getUuid(), ship -> ship));
+        .collect(Collectors.toMap(ship -> ship.getShipState().getUuid(), ship -> ship));
 
+    // display a GameSnapshot from some time ago(DISPLAY_GAME_TIME_OFFSET in ms)
     long limit = System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET;
     Optional<GameSnapshot> displaySnapshotTimeOpt = gameSnapshotBuffer.getLatestSnapshotBeforeLimit(limit);
     displaySnapshotTimeOpt.ifPresent(gameSnapshot -> {
-      Map<UUID, EntityState> ships = gameSnapshot.getShips();
-      ships.entrySet().forEach(entry -> {
-        UUID uuid = entry.getKey();
-        EntityState state = entry.getValue();
+
+      Map<UUID, ShipState> shipStates = gameSnapshot.getShips();
+      shipStates.forEach((uuid, state) -> {
+
         if (!shipActors.containsKey(uuid)) {
           // getGame().getStage().addActor(new ShipActor(ship));
-          entities.put(ship.getUuid(), new Ship(ship.getUuid(), world));
+          this.shipActors.put(uuid, new ShipActor(state));
         } else {
-          ships.get(ship.getUuid()).setState(ship);
+          shipActors.get(uuid).setShipState(state);
         }
-        getGame().getCamera().position.set(ship.getX(), ship.getY(), 5);
+
+        if (self.getUuid().equals(uuid)) {
+          getGame().getCamera().position.set(state.getX(), state.getY(), 0);
+        }
       });
     });
 

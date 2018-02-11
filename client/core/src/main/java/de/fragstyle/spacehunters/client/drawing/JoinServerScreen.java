@@ -16,13 +16,11 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
-public abstract class JoinServerScreen extends GameAwareScreenAdapter<SpaceHuntersClientGame> {
+public class JoinServerScreen extends GameAwareScreenAdapter<SpaceHuntersClientGame> {
 
   private final Client client;
 
   private AsyncExecutor asyncExecutor = new AsyncExecutor(3);
-
-  protected abstract void successfullyConnected();
 
   public JoinServerScreen(SpaceHuntersClientGame game) {
     super(game);
@@ -34,15 +32,11 @@ public abstract class JoinServerScreen extends GameAwareScreenAdapter<SpaceHunte
       @Override
       protected void gotInput(ConnectDialog dialog, String username, String hostname) {
         asyncExecutor.submit(() -> {
-          dialog.setStatus("Verbinden...");
-          Optional<String> error = connect(username, hostname);
+          dialog.setStatus("Verbinden..."); // todo add timeout if LoginAccepted never is received
+          Optional<String> error = sendLoginRequest(username, hostname);
           if (error.isPresent()) {
             dialog.setStatus(error.get());
             Gdx.app.error(TAG, error.get());
-          } else {
-            dialog.setStatus("Verbunden!");
-            dialog.hide();
-            Gdx.app.postRunnable(() -> successfullyConnected());
           }
 
           return null;
@@ -61,7 +55,7 @@ public abstract class JoinServerScreen extends GameAwareScreenAdapter<SpaceHunte
   /**
    * @return contains the error message or is absent if it connected successfully
    */
-  private Optional<String> connect(String username, String host) {
+  private Optional<String> sendLoginRequest(String username, String host) {
     try {
       client.connect(5000, host, Constants.TCP_PORT, Constants.UDP_PORT);
     } catch (IOException e) {

@@ -4,16 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import de.fragstyle.spacehunters.common.models.ship.ShipState;
-import de.fragstyle.spacehunters.common.packets.server.ShipStatePacket;
 
 public class ShipActor extends BetterActor {
 
-    private ShipState state;
+    private ShipState shipState;
 
     private Texture texture = new Texture(Gdx.files.internal("ship.png"));
 
-    public ShipActor(ShipState shipStatePacket) {
-        this.state = shipStatePacket;
+    public ShipActor(ShipState shipState) {
+        this.shipState = shipState;
         setSize(texture.getWidth(), texture.getHeight());
         setOrigin(getWidth() / 2, getHeight() / 2);
         act(0);
@@ -35,19 +34,14 @@ public class ShipActor extends BetterActor {
             false, false);
     }
 
-    @Override
-    public void act(float delta) {
-        super.act(delta);
-
-        setPosition(state.getX(), state.getY());
-        setRotation(state.getRotation());
+    public ShipState getShipState() {
+        return shipState;
     }
 
-    public ShipState getState() {
-        return state;
-    }
+    public void setShipState(ShipState shipState) {
+        this.shipState = shipState;
 
-    public void setState(ShipState state) {
-        this.state = state;
+        setPosition(shipState.getX(), shipState.getY());
+        setRotation(shipState.getRotation());
     }
 }

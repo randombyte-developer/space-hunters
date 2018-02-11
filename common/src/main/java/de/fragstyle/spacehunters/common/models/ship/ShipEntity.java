@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.drawing.ship;
+package de.fragstyle.spacehunters.common.models.ship;
 
 import aurelienribon.bodyeditor.BodyEditorLoader;
 import com.badlogic.gdx.Gdx;
@@ -7,19 +7,26 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import de.fragstyle.spacehunters.common.drawing.Entity;
+import de.fragstyle.spacehunters.common.models.Entity;
 import java.util.UUID;
 
-public class Ship extends Entity {
+public class ShipEntity extends Entity {
 
-  public Ship(UUID uuid, World world) {
+  private static final String ID = "ship";
+
+  public ShipEntity(UUID uuid, World world) {
     super(uuid, world);
 
-    setBody(constructBody(world));
+    loadBody(world);
   }
 
-  private Body constructBody(World world) {
-    BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal("ship_box2d.json"));
+  @Override
+  public ShipState getState() {
+    return new ShipState(super.getState());
+  }
+
+  private void loadBody(World world) {
+    BodyEditorLoader loader = new BodyEditorLoader(Gdx.files.internal("ship.json"));
 
     BodyDef bodyDef = new BodyDef();
     bodyDef.type = BodyType.DynamicBody;
@@ -30,8 +37,9 @@ public class Ship extends Entity {
     fixtureDef.friction = 0.5f;
     fixtureDef.restitution = 0.3f;
 
-    loader.attachFixture(body, "ship", fixtureDef, 1);
+    loader.attachFixture(body, ID, fixtureDef, 1);
 
-    return body;
+    this.setBody(body);
+    this.setOrigin(loader.getOrigin(ID, 1));
   }
 }

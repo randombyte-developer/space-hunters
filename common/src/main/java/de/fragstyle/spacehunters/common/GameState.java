@@ -1,17 +1,13 @@
 package de.fragstyle.spacehunters.common;
 
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import de.fragstyle.spacehunters.common.models.ship.Ship;
+import de.fragstyle.spacehunters.common.models.ship.ShipEntity;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
-import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
-import de.fragstyle.spacehunters.common.packets.server.ShipStatePacket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * The mutable game state which contains all movable objects. It can be updated at any time(like when
@@ -22,27 +18,23 @@ public class GameState {
 
   private World world;
   private Map<UUID, InputPacket> lastInputs;
-  private Map<UUID, Ship> ships;
+  private Map<UUID, ShipEntity> ships;
   private int accumulator = 0;
 
   public GameState() {
     this(new World(Vector2.Zero, false), new HashMap<>());
   }
 
-  public GameState(World world, Map<UUID, Ship> ships) {
+  public GameState(World world, Map<UUID, ShipEntity> ships) {
     this.world = world;
     this.ships = ships;
   }
 
-  public void fromGameSnapshot(GameSnapshot gameSnapshot) {
-    ships = gameSnapshot.getShips();
+  public void addShip(ShipEntity shipEntity) {
+    ships.put(shipEntity.getUuid(), shipEntity);
   }
 
-  public void addShip(Ship ship) {
-    ships.put(ship.getUuid(), ship);
-  }
-
-  public Map<UUID, Ship> getShips() {
+  public Map<UUID, ShipEntity> getShips() {
     return ships;
   }
 
@@ -72,36 +64,36 @@ public class GameState {
   }
 
   private void actInputs(float deltaTime) {
-    for (Entry<UUID, Ship> entry : ships.entrySet()) {
+    for (Entry<UUID, ShipEntity> entry : ships.entrySet()) {
 
         UUID uuid = entry.getKey();
-        Ship ship = entry.getValue();
+        ShipEntity shipEntity = entry.getValue();
 
         // == SHIP ==
 
-        ship.getBody().applyForce(new Vector2(1, 0), ship.getOrigin(), true);
+        shipEntity.getBody().applyForce(new Vector2(1, 0), shipEntity.getOrigin(), true);
 
         // == ROTATION ==
 
-          /*float rotSpeed = ship.getRotationSpeed();
+          /*float rotSpeed = shipEntity.getRotationSpeed();
 
           // prevent strange small rotation speeds
           if (-Constants.MINIMAL_ABSOLUTE_ROTATION_SPEED < rotSpeed && rotSpeed< Constants.MINIMAL_ABSOLUTE_ROTATION_SPEED) {
             rotSpeed = 0;
           }
 
-          float rotation = ship.getRotation() + rotSpeed * deltaTime;
+          float rotation = shipEntity.getRotation() + rotSpeed * deltaTime;
 
           float rotationFriction = rotSpeed == 0 ? 0 : (rotSpeed > 0 ? -Constants.ROTATION_FRICTION : Constants.ROTATION_FRICTION);
           rotSpeed = rotSpeed + rotationFriction * deltaTime;
 
           // == MOVEMENT ==
 
-          float xAcceleration = MathUtils.cosDeg(rotation) * ship.getAcceleration();
-          float yAcceleration = MathUtils.sinDeg(rotation) * ship.getAcceleration();
+          float xAcceleration = MathUtils.cosDeg(rotation) * shipEntity.getAcceleration();
+          float yAcceleration = MathUtils.sinDeg(rotation) * shipEntity.getAcceleration();
 
-          float xSpeed = ship.getXSpeed() + xAcceleration * deltaTime;
-          float ySpeed = ship.getYSpeed() + yAcceleration * deltaTime;
+          float xSpeed = shipEntity.getXSpeed() + xAcceleration * deltaTime;
+          float ySpeed = shipEntity.getYSpeed() + yAcceleration * deltaTime;
 
           if (xAcceleration == 0) {
             float xFriction = xSpeed == 0 ? 0 : (xSpeed > 0 ? -Constants.FRICTION : Constants.FRICTION);
@@ -123,19 +115,23 @@ public class GameState {
             ySpeed = 0;
           }
 
-          float x = ship.getX() + xSpeed * deltaTime;
-          float y = ship.getY() + ySpeed * deltaTime;*/
+          float x = shipEntity.getX() + xSpeed * deltaTime;
+          float y = shipEntity.getY() + ySpeed * deltaTime;*/
 
-        //return new ShipStatePacket(ship.getUuid(), x, y, rotation, rotSpeed, xSpeed, ySpeed, ship.getAcceleration());
+        //return new ShipStatePacket(shipEntity.getUuid(), x, y, rotation, rotSpeed, xSpeed, ySpeed, shipEntity.getAcceleration());
     }
   }
 
   public void logAllShips() {
-    for (Entry<UUID, ShipStatePacket> entry : ships.entrySet()) {
-      ShipStatePacket ship = entry.getValue();
+    for (Entry<UUID, ShipEntity> entry : ships.entrySet()) {
+      entry.getValue();
       //String output = "V: " + ((int) ship.getXSpeed()) + ";" + ((int) ship.getYSpeed());
       //String output = "A: " + ((int) ship.getXAcceleration()) + ";" + ((int) ship.getYAcceleration());
       //Gdx.app.log("", output);
     }
+  }
+
+  public World getWorld() {
+    return world;
   }
 }

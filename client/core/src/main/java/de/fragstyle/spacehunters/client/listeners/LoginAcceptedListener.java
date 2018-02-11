@@ -8,6 +8,12 @@ import de.fragstyle.spacehunters.common.packets.server.LoginAccepted;
 
 public class LoginAcceptedListener extends Listener {
 
+  private SpaceHuntersClientGame spaceHuntersClientGame;
+
+  public LoginAcceptedListener(SpaceHuntersClientGame spaceHuntersClientGame) {
+    this.spaceHuntersClientGame = spaceHuntersClientGame;
+  }
+
   @Override
   public void received(Connection connection, Object object) {
     super.received(connection, object);
@@ -15,7 +21,7 @@ public class LoginAcceptedListener extends Listener {
     if (object instanceof LoginAccepted) {
       LoginAccepted loginAccepted = (LoginAccepted) object;
 
-      Gdx.app.log(SpaceHuntersClientGame.TAG, "Connected!");
+      Gdx.app.postRunnable(() -> spaceHuntersClientGame.successfullyConnected(loginAccepted.getPlayer()));
     }
   }
 }

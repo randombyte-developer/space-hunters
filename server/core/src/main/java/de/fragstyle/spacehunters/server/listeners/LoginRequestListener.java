@@ -47,7 +47,7 @@ public abstract class LoginRequestListener extends Listener {
 
       newPlayer(ServerPlayer.fromPlayer(player, connection));
 
-      connection.sendTCP(new LoginAccepted());
+      connection.sendTCP(new LoginAccepted(player));
     }
   }
 }

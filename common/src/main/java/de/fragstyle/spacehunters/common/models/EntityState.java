@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.drawing;
+package de.fragstyle.spacehunters.common.models;
 
 import java.util.UUID;
 
@@ -9,8 +9,13 @@ public class EntityState {
   private float y;
   private float rotation;
 
-  private EntityState(UUID uuid) {
-    this.uuid = uuid;
+  protected EntityState() { }
+
+  public EntityState(EntityState entityState) {
+    this.uuid = entityState.uuid;
+    this.x = entityState.x;
+    this.y = entityState.y;
+    this.rotation = entityState.rotation;
   }
 
   public EntityState(UUID uuid, float x, float y, float rotation) {
