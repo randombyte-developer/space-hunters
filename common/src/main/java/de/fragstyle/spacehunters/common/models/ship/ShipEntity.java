@@ -18,6 +18,7 @@ public class ShipEntity extends Entity {
     super(uuid, world);
 
     loadBody(world);
+    getBody().setAngularDamping(1);
   }
 
   @Override
@@ -31,15 +32,16 @@ public class ShipEntity extends Entity {
     BodyDef bodyDef = new BodyDef();
     bodyDef.type = BodyType.DynamicBody;
     Body body = world.createBody(bodyDef);
+    body.setTransform(100, 100, 0);
 
     FixtureDef fixtureDef = new FixtureDef();
-    fixtureDef.density = 1;
+    fixtureDef.density = 1f;
     fixtureDef.friction = 0.5f;
     fixtureDef.restitution = 0.3f;
 
-    loader.attachFixture(body, ID, fixtureDef, 1);
+    loader.attachFixture(body, ID, fixtureDef, 100);
 
     this.setBody(body);
-    this.setOrigin(loader.getOrigin(ID, 1));
+    this.setOrigin(loader.getOrigin(ID, 100));
   }
 }

@@ -18,7 +18,7 @@ public class Entity {
   }
 
   public EntityState getState() {
-    return new EntityState(uuid, body.getPosition().x, body.getPosition().y, body.getAngle() + MathUtils.radiansToDegrees);
+    return new EntityState(uuid, body.getPosition().x, body.getPosition().y, body.getAngle() * MathUtils.radiansToDegrees);
   }
 
   public UUID getUuid() {

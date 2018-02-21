@@ -44,7 +44,7 @@ public class SpaceHuntersClientGame extends SimpleGame {
   public void render() {
     super.render();
 
-    if (client.isConnected()) {
+    if (gamefieldScreen != null && gamefieldScreen.getViewer().isPresent()) {
       client.sendUDP(createInputPacket());
     }
   }

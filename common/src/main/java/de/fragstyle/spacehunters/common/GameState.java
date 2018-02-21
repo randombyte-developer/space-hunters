@@ -1,5 +1,6 @@
 package de.fragstyle.spacehunters.common;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import de.fragstyle.spacehunters.common.models.ship.ShipEntity;
@@ -10,16 +11,15 @@ import java.util.Map.Entry;
 import java.util.UUID;
 
 /**
- * The mutable game state which contains all movable objects. It can be updated at any time(like when
- * an {@link InputPacket} is received). The state is periodically sent to the clients, but as
- * an immutable {@link de.fragstyle.spacehunters.common.packets.server.GameSnapshot}.
+ * The mutable game state which contains all movable objects. It can update itself(physics).
  */
 public class GameState {
 
   private World world;
-  private Map<UUID, InputPacket> lastInputs;
   private Map<UUID, ShipEntity> ships;
-  private int accumulator = 0;
+
+  private Map<UUID, InputPacket> lastInputs = new HashMap<>();
+  private float accumulator = 0;
 
   public GameState() {
     this(new World(Vector2.Zero, false), new HashMap<>());
@@ -51,10 +51,12 @@ public class GameState {
   }
 
   /**
-   * Call this in the app's render() method @60 fps.
+   * Call this in the servers' render() method @60 fps.
    */
   public void act(float deltaTime) {
     float frameTime = Math.min(deltaTime, 0.25f);
+
+    // This helps with simulating the world; https://gafferongames.com/post/fix_your_timestep/
     accumulator += frameTime;
     while (accumulator >= Constants.STEP_TIME) {
       actInputs(Constants.STEP_TIME);
@@ -64,62 +66,16 @@ public class GameState {
   }
 
   private void actInputs(float deltaTime) {
-    for (Entry<UUID, ShipEntity> entry : ships.entrySet()) {
+    ships.forEach((key, shipEntity) -> {
+      InputPacket inputPacket = lastInputs.get(key);
+      if (inputPacket == null) return;
 
-        UUID uuid = entry.getKey();
-        ShipEntity shipEntity = entry.getValue();
+      shipEntity.getBody().applyAngularImpulse(inputPacket.getRotation() * 250_000f, true);
 
-        // == SHIP ==
-
-        shipEntity.getBody().applyForce(new Vector2(1, 0), shipEntity.getOrigin(), true);
-
-        // == ROTATION ==
-
-          /*float rotSpeed = shipEntity.getRotationSpeed();
-
-          // prevent strange small rotation speeds
-          if (-Constants.MINIMAL_ABSOLUTE_ROTATION_SPEED < rotSpeed && rotSpeed< Constants.MINIMAL_ABSOLUTE_ROTATION_SPEED) {
-            rotSpeed = 0;
-          }
-
-          float rotation = shipEntity.getRotation() + rotSpeed * deltaTime;
-
-          float rotationFriction = rotSpeed == 0 ? 0 : (rotSpeed > 0 ? -Constants.ROTATION_FRICTION : Constants.ROTATION_FRICTION);
-          rotSpeed = rotSpeed + rotationFriction * deltaTime;
-
-          // == MOVEMENT ==
-
-          float xAcceleration = MathUtils.cosDeg(rotation) * shipEntity.getAcceleration();
-          float yAcceleration = MathUtils.sinDeg(rotation) * shipEntity.getAcceleration();
-
-          float xSpeed = shipEntity.getXSpeed() + xAcceleration * deltaTime;
-          float ySpeed = shipEntity.getYSpeed() + yAcceleration * deltaTime;
-
-          if (xAcceleration == 0) {
-            float xFriction = xSpeed == 0 ? 0 : (xSpeed > 0 ? -Constants.FRICTION : Constants.FRICTION);
-            xSpeed = xSpeed + xFriction * deltaTime;
-          }
-          if (yAcceleration == 0) {
-            float yFriction = ySpeed == 0 ? 0 : (ySpeed > 0 ? -Constants.FRICTION : Constants.FRICTION);
-            ySpeed = ySpeed + yFriction * deltaTime;
-          }
-
-          xSpeed = MathUtils.clamp(xSpeed, -Constants.MAXIMAL_ABSOLUTE_SPEED, Constants.MAXIMAL_ABSOLUTE_SPEED);
-          ySpeed = MathUtils.clamp(ySpeed, -Constants.MAXIMAL_ABSOLUTE_SPEED, Constants.MAXIMAL_ABSOLUTE_SPEED);
-
-          // prevent strange small velocities
-          if (-Constants.MINIMAL_ABSOLUTE_SPEED < xSpeed && xSpeed< Constants.MINIMAL_ABSOLUTE_SPEED) {
-            xSpeed = 0;
-          }
-          if (-Constants.MINIMAL_ABSOLUTE_SPEED < ySpeed && ySpeed< Constants.MINIMAL_ABSOLUTE_SPEED) {
-            ySpeed = 0;
-          }
-
-          float x = shipEntity.getX() + xSpeed * deltaTime;
-          float y = shipEntity.getY() + ySpeed * deltaTime;*/
-
-        //return new ShipStatePacket(shipEntity.getUuid(), x, y, rotation, rotSpeed, xSpeed, ySpeed, shipEntity.getAcceleration());
-    }
+      float xForce = inputPacket.getAcceleration() * MathUtils.cos(shipEntity.getBody().getAngle()) * Constants.ACCELERATION_FORCE;
+      float yForce = inputPacket.getAcceleration() * MathUtils.sin(shipEntity.getBody().getAngle()) * Constants.ACCELERATION_FORCE;
+      shipEntity.getBody().applyForce(new Vector2(xForce, yForce), shipEntity.getBody().getPosition().add(shipEntity.getOrigin()), true);
+    });
   }
 
   public void logAllShips() {

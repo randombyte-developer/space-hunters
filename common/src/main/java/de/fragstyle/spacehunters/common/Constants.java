@@ -6,11 +6,12 @@ public class Constants {
 
   public static final int DISPLAY_GAME_TIME_OFFSET = 100;
 
-  public static final int STEP_TIME = 16;
+  public static final float STEP_TIME = 1/60f;
   public static final int VELOCITY_ITERATIONS = 6;
   public static final int POSITION_ITERATIONS = 2;
 
-  public static final float ACCELERATION = 550;
+  public static final float ACCELERATION_FORCE = 100_000;
+
   public static final float MAXIMAL_ABSOLUTE_SPEED = 500;
   public static final float MINIMAL_ABSOLUTE_SPEED = 0.05f;
   public static final float FRICTION = 150;

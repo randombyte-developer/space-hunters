@@ -1,28 +1,30 @@
 package de.fragstyle.spacehunters.server;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Server;
 import de.fragstyle.spacehunters.common.Constants;
 import de.fragstyle.spacehunters.common.GameState;
 import de.fragstyle.spacehunters.common.KryoUtils;
+import de.fragstyle.spacehunters.common.drawing.GamefieldScreen;
+import de.fragstyle.spacehunters.common.drawing.SimpleGame;
 import de.fragstyle.spacehunters.common.packets.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
 import de.fragstyle.spacehunters.server.listeners.Listeners;
 import java.io.IOException;
 
-public class SpaceHuntersServer extends ApplicationAdapter {
+public class SpaceHuntersServerGame extends SimpleGame {
 
   private static final int GAME_STATE_TIME_FRAME = 1; // how often a snapshot of the current game state is taken
 
   private final Server server = new Server();
   private final PlayerList playerList = new PlayerList();
 
-  private Stage stage;
+  private GamefieldScreen gamefieldScreen = null;
+
   private Skin skin;
 
   private Label infoLabel;
@@ -32,16 +34,27 @@ public class SpaceHuntersServer extends ApplicationAdapter {
 
   private int millisSinceLastGameStateSnapshot = 0;
 
-  public static final String TAG = "SpaceHuntersServer";
+  public static final String TAG = "SpaceHuntersServerGame";
+
+  private Matrix4 debugMatrix;
+  private Box2DDebugRenderer debugRenderer;
 
   @Override
   public void create() {
-    stage = new Stage();
+    super.create();
+
     skin = new Skin(Gdx.files.internal("uiskin.json"));
-    Gdx.input.setInputProcessor(stage);
+    //Gdx.input.setInputProcessor(stage);
+
+    gamefieldScreen = new GamefieldScreen(this, null);
+    setScreen(gamefieldScreen);
 
     infoLabel = new Label("Connected clients: 0", skin);
-    stage.addActor(infoLabel);
+    gamefieldScreen.getGame().getStage().addActor(infoLabel);
+
+    debugMatrix = new Matrix4(getCamera().combined);
+    debugMatrix.scale(1, 1, 1f);
+    debugRenderer = new Box2DDebugRenderer();
 
     KryoUtils.prepareKryo(server.getKryo());
     Listeners.registerListeners(this, server);
@@ -58,8 +71,7 @@ public class SpaceHuntersServer extends ApplicationAdapter {
 
   @Override
   public void render() {
-    Gdx.gl.glClearColor(0, 0, 1, 1);
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    super.render();
 
     infoLabel.setText("Connected clients: " + server.getConnections().length);
 
@@ -74,16 +86,18 @@ public class SpaceHuntersServer extends ApplicationAdapter {
     }
 
     gameSnapshotBuffer.getLatestSnapshotTime().ifPresent(lastSnapshotTime -> {
-      server.sendToAllUDP(gameSnapshotBuffer.getSnapshots().get(lastSnapshotTime)); // guaranteed to never be null
+      GameSnapshot gameSnapshot = gameSnapshotBuffer.getSnapshots().get(lastSnapshotTime); // guaranteed to never be null
+      server.sendToAllUDP(gameSnapshot);
+      gamefieldScreen.getGameSnapshotBuffer().addState(gameSnapshot);
     });
 
-    stage.act();
-    stage.draw();
+    debugRenderer.render(gameState.getWorld(), debugMatrix);
   }
 
   @Override
   public void dispose() {
-    stage.dispose();
+    super.dispose();
+
     try {
       server.dispose();
     } catch (IOException e) {
