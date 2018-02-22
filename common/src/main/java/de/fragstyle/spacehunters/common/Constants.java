@@ -10,7 +10,7 @@ public class Constants {
   public static final int VELOCITY_ITERATIONS = 6;
   public static final int POSITION_ITERATIONS = 2;
 
-  public static final float ACCELERATION_FORCE = 100_000;
+  public static final float ACCELERATION_FORCE = 300_000;
 
   public static final float MAXIMAL_ABSOLUTE_SPEED = 500;
   public static final float MINIMAL_ABSOLUTE_SPEED = 0.05f;

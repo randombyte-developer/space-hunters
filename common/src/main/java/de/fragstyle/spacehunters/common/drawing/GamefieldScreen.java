@@ -4,6 +4,8 @@ import static de.fragstyle.spacehunters.common.Constants.DISPLAY_GAME_TIME_OFFSE
 
 import com.badlogic.gdx.graphics.Color;
 import com.sun.istack.internal.Nullable;
+import de.fragstyle.spacehunters.common.drawing.actors.Frame;
+import de.fragstyle.spacehunters.common.drawing.actors.ShipActor;
 import de.fragstyle.spacehunters.common.models.ship.ShipState;
 import de.fragstyle.spacehunters.common.packets.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
@@ -26,8 +28,9 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
     super(game);
     this.viewer = viewer;
 
-    game.getCamera().zoom = 1.5f;
+    game.getCamera().zoom = 2f;
     game.getCamera().position.set(0, 0, 0);
+    game.getCamera().update();
     game.getStage().setDebugAll(true);
 
     setupInitial();

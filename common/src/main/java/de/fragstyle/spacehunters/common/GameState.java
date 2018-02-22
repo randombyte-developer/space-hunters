@@ -74,7 +74,7 @@ public class GameState {
 
       float xForce = inputPacket.getAcceleration() * MathUtils.cos(shipEntity.getBody().getAngle()) * Constants.ACCELERATION_FORCE;
       float yForce = inputPacket.getAcceleration() * MathUtils.sin(shipEntity.getBody().getAngle()) * Constants.ACCELERATION_FORCE;
-      shipEntity.getBody().applyForce(new Vector2(xForce, yForce), shipEntity.getBody().getPosition().add(shipEntity.getOrigin()), true);
+      shipEntity.getBody().applyForce(new Vector2(xForce, yForce), shipEntity.getBody().getWorldCenter(), true);
     });
   }
 

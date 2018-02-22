@@ -7,8 +7,8 @@ public class ShipState extends EntityState {
 
   protected ShipState() { }
 
-  public ShipState(UUID uuid, float x, float y, float rotation) {
-    super(uuid, x, y, rotation);
+  public ShipState(UUID uuid, float x, float y, float rotation, float originX, float originY) {
+    super(uuid, x, y, rotation, originX, originY);
   }
 
   public ShipState(EntityState entityState) {

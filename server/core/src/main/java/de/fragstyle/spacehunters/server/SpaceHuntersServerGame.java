@@ -53,7 +53,7 @@ public class SpaceHuntersServerGame extends SimpleGame {
     gamefieldScreen.getGame().getStage().addActor(infoLabel);
 
     debugMatrix = new Matrix4(getCamera().combined);
-    debugMatrix.scale(1, 1, 1f);
+    debugMatrix.scale(1f, 1f, 1);
     debugRenderer = new Box2DDebugRenderer();
 
     KryoUtils.prepareKryo(server.getKryo());
@@ -90,8 +90,6 @@ public class SpaceHuntersServerGame extends SimpleGame {
       server.sendToAllUDP(gameSnapshot);
       gamefieldScreen.getGameSnapshotBuffer().addState(gameSnapshot);
     });
-
-    debugRenderer.render(gameState.getWorld(), debugMatrix);
   }
 
   @Override

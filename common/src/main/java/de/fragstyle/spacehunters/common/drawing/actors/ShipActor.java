@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.drawing;
+package de.fragstyle.spacehunters.common.drawing.actors;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,7 +14,7 @@ public class ShipActor extends BetterActor {
     public ShipActor(ShipState shipState) {
         this.shipState = shipState;
         setSize(texture.getWidth(), texture.getHeight());
-        setOrigin(getWidth() / 2, getHeight() / 2);
+        //setOrigin(getWidth() / 2, getHeight() / 2);
         act(0);
     }
 
@@ -25,7 +25,7 @@ public class ShipActor extends BetterActor {
         // wtf, I just want to change the rotation
         batch.draw(texture,
             getX(), getY(),
-            texture.getWidth() / 2, texture.getHeight() / 2,
+            shipState.getOriginX(), shipState.getOriginY(),
             texture.getWidth(), texture.getHeight(),
             1, 1,
             getRotation(),
@@ -43,5 +43,6 @@ public class ShipActor extends BetterActor {
 
         setPosition(shipState.getX(), shipState.getY());
         setRotation(shipState.getRotation());
+        setOrigin(shipState.getOriginX(), shipState.getOriginY());
     }
 }

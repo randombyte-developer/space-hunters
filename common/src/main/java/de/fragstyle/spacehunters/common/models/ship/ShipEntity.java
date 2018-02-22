@@ -32,7 +32,7 @@ public class ShipEntity extends Entity {
     BodyDef bodyDef = new BodyDef();
     bodyDef.type = BodyType.DynamicBody;
     Body body = world.createBody(bodyDef);
-    body.setTransform(100, 100, 0);
+    body.setTransform(0, 0, 0);
 
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.density = 1f;

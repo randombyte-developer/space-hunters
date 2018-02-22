@@ -18,7 +18,8 @@ public class Entity {
   }
 
   public EntityState getState() {
-    return new EntityState(uuid, body.getPosition().x, body.getPosition().y, body.getAngle() * MathUtils.radiansToDegrees);
+    return new EntityState(uuid, body.getPosition().x, body.getPosition().y, body.getAngle() * MathUtils.radiansToDegrees,
+            body.getLocalCenter().x, body.getLocalCenter().y);
   }
 
   public UUID getUuid() {
@@ -34,7 +35,7 @@ public class Entity {
   }
 
   public Vector2 getOrigin() {
-    return origin;
+    return body.getLocalCenter();
   }
 
   protected void setOrigin(Vector2 origin) {
