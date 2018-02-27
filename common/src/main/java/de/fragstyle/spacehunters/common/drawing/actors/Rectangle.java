@@ -1,10 +1,11 @@
-package de.fragstyle.spacehunters.common.drawing;
+package de.fragstyle.spacehunters.common.drawing.actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+import de.fragstyle.spacehunters.common.drawing.actors.BetterActor;
 
 public class Rectangle extends BetterActor {
 

@@ -6,10 +6,11 @@ import com.esotericsoftware.kryonet.Client;
 import de.fragstyle.spacehunters.client.drawing.JoinServerScreen;
 import de.fragstyle.spacehunters.client.listeners.Listeners;
 import de.fragstyle.spacehunters.common.KryoUtils;
-import de.fragstyle.spacehunters.common.drawing.Gamefield;
+import de.fragstyle.spacehunters.common.drawing.GamefieldScreen;
 import de.fragstyle.spacehunters.common.drawing.SimpleGame;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
+import de.fragstyle.spacehunters.common.packets.server.Player;
 import java.io.IOException;
 
 public class SpaceHuntersClientGame extends SimpleGame {
@@ -18,7 +19,7 @@ public class SpaceHuntersClientGame extends SimpleGame {
 
   private Client client;
 
-  private Gamefield gamefield = null;
+  private GamefieldScreen gamefieldScreen = null;
 
   @Override
   public void create() {
@@ -27,23 +28,23 @@ public class SpaceHuntersClientGame extends SimpleGame {
     client = new Client();
     prepareAndStartClient();
 
-    JoinServerScreen joinServerScreen = new JoinServerScreen(this) {
-      @Override
-      protected void successfullyConnected() {
-        newStage();
-        gamefield = new Gamefield(SpaceHuntersClientGame.this);
-        setScreen(gamefield);
-        //joinServerScreen.dispose(); todo make this work
-      }
-    };
+    JoinServerScreen joinServerScreen = new JoinServerScreen(this);
     setScreen(joinServerScreen);
+  }
+
+  public void successfullyConnected(Player self) {
+    screen.dispose();
+
+    newStage();
+    gamefieldScreen = new GamefieldScreen(SpaceHuntersClientGame.this, self);
+    setScreen(gamefieldScreen);
   }
 
   @Override
   public void render() {
     super.render();
 
-    if (client.isConnected()) {
+    if (gamefieldScreen != null && gamefieldScreen.getViewer().isPresent()) {
       client.sendUDP(createInputPacket());
     }
   }
@@ -87,12 +88,12 @@ public class SpaceHuntersClientGame extends SimpleGame {
   }
 
   /**
-   * Adds the given gameSnapshot. This is a proxy to the {@link Gamefield} if it is present. If no
-   * Gamefield is currently displayed, the {@link GameSnapshot} is discarded.
+   * Adds the given gameSnapshot. This is a proxy to the {@link GamefieldScreen} if it is present. If no
+   * GamefieldScreen is currently displayed, the {@link GameSnapshot} is discarded.
    */
   public void addGameSnapshot(GameSnapshot gameSnapshot) {
-    if (gamefield != null) {
-      gamefield.getGameSnapshotBuffer().addState(gameSnapshot);
+    if (gamefieldScreen != null) {
+      gamefieldScreen.getGameSnapshotBuffer().addState(gameSnapshot);
     }
   }
 

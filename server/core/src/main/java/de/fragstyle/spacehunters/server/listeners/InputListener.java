@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
-import de.fragstyle.spacehunters.server.SpaceHuntersServer;
+import de.fragstyle.spacehunters.server.SpaceHuntersServerGame;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ public abstract class InputListener extends Listener {
 
       Optional<UUID> playerUuidOpt = getPlayerUuidFromKryoNetClientId(connection.getID());
       if (!playerUuidOpt.isPresent()) {
-        Gdx.app.log(SpaceHuntersServer.TAG,
+        Gdx.app.log(SpaceHuntersServerGame.TAG,
             "Ignoring InputPacket from connection '" + connection.getID() + "' since it's not mapped to any online player!");
         return;
       }
