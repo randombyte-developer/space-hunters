@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common;
+package de.fragstyle.spacehunters.common.game;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -44,7 +44,7 @@ public class GameState {
     }
     addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(50, 100), 30, Vector2.Zero), new Vector2(800, 5)), world));
     addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(-300, -100), 70, Vector2.Zero), new Vector2(400, 100)), world));
-    addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(200, -500), 10, Vector2.Zero), new Vector2(400, 500)), world));
+    addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(200, -600), 10, Vector2.Zero), new Vector2(400, 500)), world));
   }
 
   public void addEntity(Entity entity) {

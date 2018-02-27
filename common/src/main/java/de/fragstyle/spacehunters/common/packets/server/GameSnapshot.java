@@ -1,6 +1,6 @@
 package de.fragstyle.spacehunters.common.packets.server;
 
-import de.fragstyle.spacehunters.common.GameState;
+import de.fragstyle.spacehunters.common.game.GameState;
 import de.fragstyle.spacehunters.common.models.EntityState;
 import java.util.HashMap;
 import java.util.Map;

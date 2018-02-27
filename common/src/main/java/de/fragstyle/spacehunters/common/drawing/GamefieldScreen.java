@@ -1,23 +1,22 @@
 package de.fragstyle.spacehunters.common.drawing;
 
-import static de.fragstyle.spacehunters.common.Constants.DISPLAY_GAME_TIME_OFFSET;
+import static de.fragstyle.spacehunters.common.game.Constants.DISPLAY_GAME_TIME_OFFSET;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.sun.istack.internal.Nullable;
-import de.fragstyle.spacehunters.common.drawing.actors.ShipActor;
+import de.fragstyle.spacehunters.common.game.GameAwareScreenAdapter;
+import de.fragstyle.spacehunters.common.game.SimpleGame;
 import de.fragstyle.spacehunters.common.models.EntityState;
 import de.fragstyle.spacehunters.common.models.wall.WallState;
-import de.fragstyle.spacehunters.common.packets.GameSnapshotBuffer;
+import de.fragstyle.spacehunters.common.packets.server.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
 import de.fragstyle.spacehunters.common.packets.server.Player;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
 
@@ -40,11 +39,6 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
   @Override
   public void render(float delta) {
     super.render(delta);
-
-    Map<UUID, ShipActor> shipActors = Arrays.stream(getGame().getStage().getActors().items)
-        .filter(actor -> actor instanceof ShipActor)
-        .map(actor -> (ShipActor) actor)
-        .collect(Collectors.toMap(ship -> ship.getShipState().getUuid(), ship -> ship));
 
     // display a GameSnapshot from some time ago(DISPLAY_GAME_TIME_OFFSET in ms)
     long limit = System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET;

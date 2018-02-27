@@ -1,6 +1,5 @@
-package de.fragstyle.spacehunters.common.packets;
+package de.fragstyle.spacehunters.common.packets.server;
 
-import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

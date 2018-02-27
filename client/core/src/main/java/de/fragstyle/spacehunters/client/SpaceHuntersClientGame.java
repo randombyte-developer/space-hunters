@@ -7,7 +7,7 @@ import de.fragstyle.spacehunters.client.drawing.JoinServerScreen;
 import de.fragstyle.spacehunters.client.listeners.Listeners;
 import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.common.drawing.GamefieldScreen;
-import de.fragstyle.spacehunters.common.drawing.SimpleGame;
+import de.fragstyle.spacehunters.common.game.SimpleGame;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
 import de.fragstyle.spacehunters.common.packets.server.Player;

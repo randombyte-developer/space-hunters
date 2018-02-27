@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.drawing;
+package de.fragstyle.spacehunters.common.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;

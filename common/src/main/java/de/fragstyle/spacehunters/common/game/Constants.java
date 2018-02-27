@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common;
+package de.fragstyle.spacehunters.common.game;
 
 public class Constants {
   public static final int TCP_PORT = 9880; // todo make configurable

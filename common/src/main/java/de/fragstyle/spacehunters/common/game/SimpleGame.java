@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.drawing;
+package de.fragstyle.spacehunters.common.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
