@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import de.fragstyle.spacehunters.common.models.Entity;
+import de.fragstyle.spacehunters.common.models.EntityState;
 import de.fragstyle.spacehunters.common.models.wall.WallEntity;
 import de.fragstyle.spacehunters.common.models.wall.WallState;
 import de.fragstyle.spacehunters.common.models.wall.Walls;
@@ -41,6 +42,9 @@ public class GameState {
     for (WallState wallState : wallStates) {
       addEntity(new WallEntity(wallState, world));
     }
+    addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(50, 100), 30, Vector2.Zero), new Vector2(800, 5)), world));
+    addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(-300, -100), 70, Vector2.Zero), new Vector2(400, 100)), world));
+    addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(200, -500), 10, Vector2.Zero), new Vector2(400, 500)), world));
   }
 
   public void addEntity(Entity entity) {
