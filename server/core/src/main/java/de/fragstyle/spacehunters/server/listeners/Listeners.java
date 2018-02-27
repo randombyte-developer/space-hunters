@@ -1,7 +1,10 @@
 package de.fragstyle.spacehunters.server.listeners;
 
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.EndPoint;
+import de.fragstyle.spacehunters.common.models.EntityState;
 import de.fragstyle.spacehunters.common.models.ship.ShipEntity;
+import de.fragstyle.spacehunters.common.models.ship.ShipState;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import de.fragstyle.spacehunters.server.ServerPlayer;
 import de.fragstyle.spacehunters.server.SpaceHuntersServerGame;
@@ -15,8 +18,8 @@ public class Listeners {
       @Override
       protected void newPlayer(ServerPlayer serverPlayer) {
         spaceHuntersServerGame.getPlayerList().add(serverPlayer);
-        spaceHuntersServerGame
-            .getGameState().addShip(new ShipEntity(serverPlayer.getUuid(), spaceHuntersServerGame.getGameState().getWorld()));
+        ShipState shipState = new ShipState(new EntityState(serverPlayer.getUuid(), Vector2.Zero, 0, new Vector2(32, 32)));
+        spaceHuntersServerGame.getGameState().addEntity(new ShipEntity(shipState, spaceHuntersServerGame.getGameState().getWorld()));
       }
 
       @Override

@@ -25,7 +25,7 @@ public class ShipActor extends BetterActor {
         // wtf, I just want to change the rotation
         batch.draw(texture,
             getX(), getY(),
-            shipState.getOriginX(), shipState.getOriginY(),
+            shipState.getOrigin().x, shipState.getOrigin().y,
             texture.getWidth(), texture.getHeight(),
             1, 1,
             getRotation(),
@@ -41,8 +41,8 @@ public class ShipActor extends BetterActor {
     public void setShipState(ShipState shipState) {
         this.shipState = shipState;
 
-        setPosition(shipState.getX(), shipState.getY());
+        setPosition(shipState.getPosition().x, shipState.getPosition().y);
         setRotation(shipState.getRotation());
-        setOrigin(shipState.getOriginX(), shipState.getOriginY());
+        setOrigin(shipState.getOrigin().x, shipState.getOrigin().y);
     }
 }

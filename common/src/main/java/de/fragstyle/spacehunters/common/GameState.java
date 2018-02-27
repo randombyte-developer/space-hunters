@@ -3,9 +3,13 @@ package de.fragstyle.spacehunters.common;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import de.fragstyle.spacehunters.common.models.ship.ShipEntity;
+import de.fragstyle.spacehunters.common.models.Entity;
+import de.fragstyle.spacehunters.common.models.wall.WallEntity;
+import de.fragstyle.spacehunters.common.models.wall.WallState;
+import de.fragstyle.spacehunters.common.models.wall.Walls;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
@@ -16,7 +20,7 @@ import java.util.UUID;
 public class GameState {
 
   private World world;
-  private Map<UUID, ShipEntity> ships;
+  private Map<UUID, Entity> entities;
 
   private Map<UUID, InputPacket> lastInputs = new HashMap<>();
   private float accumulator = 0;
@@ -25,25 +29,34 @@ public class GameState {
     this(new World(Vector2.Zero, false), new HashMap<>());
   }
 
-  public GameState(World world, Map<UUID, ShipEntity> ships) {
+  public GameState(World world, Map<UUID, Entity> entities) {
     this.world = world;
-    this.ships = ships;
+    this.entities = entities;
+
+    setupGamefieldFrame();
   }
 
-  public void addShip(ShipEntity shipEntity) {
-    ships.put(shipEntity.getUuid(), shipEntity);
+  private void setupGamefieldFrame() {
+    List<WallState> wallStates = Walls.createFrame(0, 0, 2000, 1000, 10);
+    for (WallState wallState : wallStates) {
+      addEntity(new WallEntity(wallState, world));
+    }
   }
 
-  public Map<UUID, ShipEntity> getShips() {
-    return ships;
+  public void addEntity(Entity entity) {
+    entities.put(entity.getState().getUuid(), entity);
+  }
+
+  public Map<UUID, Entity> getEntities() {
+    return entities;
   }
 
   public void removeShip(UUID uuid) {
-    ships.remove(uuid);
+    entities.remove(uuid);
   }
 
   public void handleInputPacket(UUID shipUuid, InputPacket inputPacket) {
-    if (!ships.containsKey(shipUuid)) {
+    if (!entities.containsKey(shipUuid)) {
       throw new IllegalArgumentException("Ship with UUID '" + shipUuid.toString() + "' not found!");
     }
 
@@ -66,7 +79,7 @@ public class GameState {
   }
 
   private void actInputs(float deltaTime) {
-    ships.forEach((key, shipEntity) -> {
+    entities.forEach((key, shipEntity) -> {
       InputPacket inputPacket = lastInputs.get(key);
       if (inputPacket == null) return;
 
@@ -79,7 +92,7 @@ public class GameState {
   }
 
   public void logAllShips() {
-    for (Entry<UUID, ShipEntity> entry : ships.entrySet()) {
+    for (Entry<UUID, Entity> entry : entities.entrySet()) {
       entry.getValue();
       //String output = "V: " + ((int) ship.getXSpeed()) + ";" + ((int) ship.getYSpeed());
       //String output = "A: " + ((int) ship.getXAcceleration()) + ";" + ((int) ship.getYAcceleration());

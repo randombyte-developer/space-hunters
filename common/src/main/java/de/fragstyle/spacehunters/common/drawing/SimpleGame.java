@@ -3,6 +3,8 @@ package de.fragstyle.spacehunters.common.drawing;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -10,6 +12,8 @@ import com.badlogic.gdx.utils.viewport.ScalingViewport;
 
 public class SimpleGame extends Game {
   private Stage stage;
+  private ShapeRenderer shapeRenderer;
+
   private OrthographicCamera camera;
   private ScalingViewport viewport;
 
@@ -17,6 +21,7 @@ public class SimpleGame extends Game {
 
   @Override
   public void create() {
+    shapeRenderer  = new ShapeRenderer();
     camera = new OrthographicCamera();
     viewport = new FitViewport(800, 480, camera);
     stage = new Stage(viewport);
@@ -49,12 +54,20 @@ public class SimpleGame extends Game {
     return stage;
   }
 
+  public ShapeRenderer getShapeRenderer() {
+    return shapeRenderer;
+  }
+
   public OrthographicCamera getCamera() {
     return camera;
   }
 
   public ScalingViewport getViewport() {
     return viewport;
+  }
+
+  public SpriteBatch getStageSpriteBatch() {
+    return ((SpriteBatch) stage.getBatch());
   }
 
   public Skin getSkin() {
