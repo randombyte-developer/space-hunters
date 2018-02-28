@@ -8,23 +8,31 @@ import java.util.UUID;
 
 public class Walls {
   public static List<WallState> createFrame(float centerX, float centerY, float width, float height, float thickness) {
-    Vector2 topPosition = new Vector2(centerX - (width / 2), centerY + (height / 2) - thickness);
-    Vector2 rightPosition = new Vector2(centerX + (width / 2) - thickness, centerY + (height / 2));
-    Vector2 bottomPosition = new Vector2(centerX + (width / 2), centerY - (height / 2) + thickness);
-    Vector2 leftPosition = new Vector2(centerX - (width / 2) + thickness, centerY - (height / 2));
+    float halfWidth = width / 2f;
+    float halfHeight= height/ 2f;
+    float halfThickness = thickness / 2f;
+
+    // all position refer to the center of the wall
+    Vector2 topPosition = new Vector2(centerX, centerY + halfHeight + halfThickness);
+    Vector2 rightPosition = new Vector2(centerX + halfWidth + halfThickness, centerY);
+    Vector2 bottomPosition = new Vector2(centerX, centerY - halfHeight - halfThickness);
+    Vector2 leftPosition = new Vector2(centerX - halfWidth - halfThickness, centerY);
+
+    Vector2 horizontalDimensions = new Vector2(width, thickness);
+    Vector2 verticalDimensions = new Vector2(thickness, height);
 
     WallState top = new WallState(
-        new EntityState(UUID.randomUUID(), topPosition, -90 * 0, Vector2.Zero),
-        new Vector2(width - thickness, thickness));
+        new EntityState(UUID.randomUUID(), topPosition, 0, Vector2.Zero),
+        horizontalDimensions);
     WallState right = new WallState(
-        new EntityState(UUID.randomUUID(), rightPosition, -90 * 1, Vector2.Zero),
-        new Vector2(height - thickness, thickness));
+        new EntityState(UUID.randomUUID(), rightPosition, 0, Vector2.Zero),
+        verticalDimensions);
     WallState bottom = new WallState(
-        new EntityState(UUID.randomUUID(), bottomPosition, -90 * 2, Vector2.Zero),
-        new Vector2(width - thickness, thickness));
+        new EntityState(UUID.randomUUID(), bottomPosition, 0, Vector2.Zero),
+        horizontalDimensions);
     WallState left = new WallState(
-        new EntityState(UUID.randomUUID(), leftPosition, -90 * 3, Vector2.Zero),
-        new Vector2(height - thickness, thickness));
+        new EntityState(UUID.randomUUID(), leftPosition, 0, Vector2.Zero),
+        verticalDimensions);
 
     return Arrays.asList(top, right, bottom, left);
   }

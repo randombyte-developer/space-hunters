@@ -30,7 +30,7 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
     super(game);
     this.viewer = viewer;
 
-    game.getCamera().zoom = 8f;
+    game.getCamera().zoom = 2f;
     game.getCamera().position.set(0, 0, 0);
     game.getCamera().update();
     game.getStage().setDebugAll(true);
@@ -75,7 +75,7 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
             shapeRenderer.begin(ShapeType.Filled);
             shapeRenderer.setColor(Color.GOLD);
             shapeRenderer.rect(wallState.getPosition().x - wallState.getDimensions().x / 2f, wallState.getPosition().y - wallState.getDimensions().y / 2f,
-                0, 0,
+                wallState.getOrigin().x, wallState.getOrigin().y,
                 wallState.getDimensions().x, wallState.getDimensions().y,
                 1, 1, wallState.getRotation());
             shapeRenderer.end();

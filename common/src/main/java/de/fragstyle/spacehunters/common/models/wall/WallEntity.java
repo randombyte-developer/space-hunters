@@ -1,6 +1,7 @@
 package de.fragstyle.spacehunters.common.models.wall;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -18,7 +19,9 @@ public class WallEntity extends Entity {
 
   @Override
   public WallState getState() {
-    return (WallState) super.getState();
+    WallState wallState = (WallState) super.getState();
+    wallState.setOrigin(new Vector2(wallState.getDimensions().x / 2f, wallState.getDimensions().y / 2f));
+    return wallState;
   }
 
   protected Body loadBody(World world, EntityState entityState) {
@@ -27,7 +30,6 @@ public class WallEntity extends Entity {
     BodyDef bodyDef = new BodyDef();
     bodyDef.type = BodyType.StaticBody;
     Body body = world.createBody(bodyDef);
-    body.setTransform(wallState.getPosition().x, wallState.getPosition().y, wallState.getRotation() * MathUtils.degreesToRadians);
 
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.density = 1f;
@@ -39,6 +41,7 @@ public class WallEntity extends Entity {
     fixtureDef.shape = polygonShape;
 
     body.createFixture(fixtureDef);
+    body.setTransform(wallState.getPosition().x, wallState.getPosition().y, wallState.getRotation() * MathUtils.degreesToRadians);
 
     return body;
   }
