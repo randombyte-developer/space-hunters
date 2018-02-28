@@ -11,8 +11,8 @@ import de.fragstyle.spacehunters.common.game.GameAwareScreenAdapter;
 import de.fragstyle.spacehunters.common.game.SimpleGame;
 import de.fragstyle.spacehunters.common.models.EntityState;
 import de.fragstyle.spacehunters.common.models.wall.WallState;
-import de.fragstyle.spacehunters.common.packets.server.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
+import de.fragstyle.spacehunters.common.packets.server.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.common.packets.server.Player;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +30,7 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
     super(game);
     this.viewer = viewer;
 
-    game.getCamera().zoom = 2f;
+    game.getCamera().zoom = 8f;
     game.getCamera().position.set(0, 0, 0);
     game.getCamera().update();
     game.getStage().setDebugAll(true);
@@ -74,8 +74,8 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
             shapeRenderer.setProjectionMatrix(getGame().getStage().getBatch().getProjectionMatrix());
             shapeRenderer.begin(ShapeType.Filled);
             shapeRenderer.setColor(Color.GOLD);
-            shapeRenderer.rect(wallState.getPosition().x, wallState.getPosition().y,
-                wallState.getOrigin().x, wallState.getOrigin().y,
+            shapeRenderer.rect(wallState.getPosition().x - wallState.getDimensions().x / 2f, wallState.getPosition().y - wallState.getDimensions().y / 2f,
+                0, 0,
                 wallState.getDimensions().x, wallState.getDimensions().y,
                 1, 1, wallState.getRotation());
             shapeRenderer.end();

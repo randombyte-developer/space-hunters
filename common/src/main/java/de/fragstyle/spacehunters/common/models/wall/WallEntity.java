@@ -35,7 +35,7 @@ public class WallEntity extends Entity {
     fixtureDef.restitution = 0;
 
     PolygonShape polygonShape = new PolygonShape();
-    polygonShape.setAsBox(wallState.getDimensions().x, wallState.getDimensions().y);
+    polygonShape.setAsBox(wallState.getDimensions().x / 2f, wallState.getDimensions().y / 2f);
     fixtureDef.shape = polygonShape;
 
     body.createFixture(fixtureDef);

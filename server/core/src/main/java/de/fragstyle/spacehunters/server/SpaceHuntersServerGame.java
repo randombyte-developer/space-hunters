@@ -90,6 +90,9 @@ public class SpaceHuntersServerGame extends SimpleGame {
       server.sendToAllUDP(gameSnapshot);
       gamefieldScreen.getGameSnapshotBuffer().addState(gameSnapshot);
     });
+
+    debugMatrix = new Matrix4(getCamera().combined);
+    debugRenderer.render(gameState.getWorld(), debugMatrix);
   }
 
   @Override
