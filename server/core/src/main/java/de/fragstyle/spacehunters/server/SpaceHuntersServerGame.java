@@ -2,17 +2,17 @@ package de.fragstyle.spacehunters.server;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Server;
-import de.fragstyle.spacehunters.common.game.Constants;
-import de.fragstyle.spacehunters.common.game.GameState;
 import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.common.drawing.GamefieldScreen;
+import de.fragstyle.spacehunters.common.game.Constants;
+import de.fragstyle.spacehunters.common.game.GameState;
 import de.fragstyle.spacehunters.common.game.SimpleGame;
-import de.fragstyle.spacehunters.common.packets.server.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
+import de.fragstyle.spacehunters.common.packets.server.GameSnapshotBuffer;
 import de.fragstyle.spacehunters.server.listeners.Listeners;
 import java.io.IOException;
 
@@ -26,8 +26,6 @@ public class SpaceHuntersServerGame extends SimpleGame {
   private GamefieldScreen gamefieldScreen = null;
 
   private Skin skin;
-
-  private Label infoLabel;
 
   private final GameSnapshotBuffer gameSnapshotBuffer = new GameSnapshotBuffer();
   private final GameState gameState = new GameState();
@@ -48,9 +46,6 @@ public class SpaceHuntersServerGame extends SimpleGame {
 
     gamefieldScreen = new GamefieldScreen(this, null);
     setScreen(gamefieldScreen);
-
-    infoLabel = new Label("Connected clients: 0", skin);
-    gamefieldScreen.getGame().getStage().addActor(infoLabel);
 
     debugMatrix = new Matrix4(getCamera().combined);
     debugMatrix.scale(1f, 1f, 1);
@@ -73,8 +68,6 @@ public class SpaceHuntersServerGame extends SimpleGame {
   public void render() {
     super.render();
 
-    infoLabel.setText("Connected clients: " + server.getConnections().length);
-
     gameState.act(Gdx.graphics.getDeltaTime());
     gameState.logAllShips();
 
@@ -90,6 +83,9 @@ public class SpaceHuntersServerGame extends SimpleGame {
       server.sendToAllUDP(gameSnapshot);
       gamefieldScreen.getGameSnapshotBuffer().addState(gameSnapshot);
     });
+
+    getCamera().position.set(Vector3.Zero);
+    getCamera().zoom = 2.7f;
 
     debugMatrix = new Matrix4(getCamera().combined);
     debugRenderer.render(gameState.getWorld(), debugMatrix);

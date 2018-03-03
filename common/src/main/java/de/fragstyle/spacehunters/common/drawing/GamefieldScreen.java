@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Vector3;
 import com.sun.istack.internal.Nullable;
 import de.fragstyle.spacehunters.common.game.GameAwareScreenAdapter;
 import de.fragstyle.spacehunters.common.game.SimpleGame;
@@ -31,7 +32,7 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
     this.viewer = viewer;
 
     game.getCamera().zoom = 2f;
-    game.getCamera().position.set(0, 0, 0);
+    game.getCamera().position.set(Vector3.Zero);
     game.getCamera().update();
     game.getStage().setDebugAll(true);
   }
