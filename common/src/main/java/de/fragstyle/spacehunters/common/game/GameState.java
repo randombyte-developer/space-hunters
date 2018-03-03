@@ -87,7 +87,7 @@ public class GameState {
       InputPacket inputPacket = lastInputs.get(key);
       if (inputPacket == null) return;
 
-      shipEntity.getBody().applyAngularImpulse(inputPacket.getRotation() * 250_000f, true);
+      shipEntity.getBody().applyAngularImpulse(inputPacket.getRotation() * 100_000f, true);
 
       float xForce = inputPacket.getAcceleration() * MathUtils.cos(shipEntity.getBody().getAngle()) * Constants.ACCELERATION_FORCE;
       float yForce = inputPacket.getAcceleration() * MathUtils.sin(shipEntity.getBody().getAngle()) * Constants.ACCELERATION_FORCE;

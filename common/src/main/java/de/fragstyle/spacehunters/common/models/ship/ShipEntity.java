@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import de.fragstyle.spacehunters.common.drawing.Textures;
 import de.fragstyle.spacehunters.common.models.Entity;
 import de.fragstyle.spacehunters.common.models.EntityState;
 
@@ -16,7 +17,14 @@ public class ShipEntity extends Entity {
   public ShipEntity(ShipState shipState, World world) {
     super(shipState, world);
 
-    getBody().setAngularDamping(1);
+    getBody().setAngularDamping(3);
+  }
+
+  @Override
+  public EntityState getState() {
+    EntityState state = super.getState();
+    state.getPosition().sub(state.getOrigin());
+    return state;
   }
 
   protected Body loadBody(World world, EntityState entityState) {
@@ -34,9 +42,12 @@ public class ShipEntity extends Entity {
     fixtureDef.friction = 0.5f;
     fixtureDef.restitution = 0.3f;
 
-    loader.attachFixture(body, shipState.getEntityType().getId(), fixtureDef, 100);
+    // the texture is a square
+    float scale = Textures.SHIP.getWidth();
 
-    //this.setOrigin(loader.getOrigin(ID, 100));
+    loader.attachFixture(body, shipState.getEntityType().getId(), fixtureDef, scale);
+
+    entityState.setOrigin(loader.getOrigin(shipState.getEntityType().getId(), scale));
 
     return body;
   }
