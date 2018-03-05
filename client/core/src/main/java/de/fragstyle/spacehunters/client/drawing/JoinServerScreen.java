@@ -10,8 +10,8 @@ import de.fragstyle.spacehunters.client.ConnectDialog;
 import de.fragstyle.spacehunters.client.SpaceHuntersClientGame;
 import de.fragstyle.spacehunters.common.game.Constants;
 import de.fragstyle.spacehunters.common.game.GameAwareScreenAdapter;
-import de.fragstyle.spacehunters.common.packets.client.LoginRequest;
-import de.fragstyle.spacehunters.common.packets.server.Player;
+import de.fragstyle.spacehunters.common.packets.client.LoginRequestPacket;
+import de.fragstyle.spacehunters.common.models.Player;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,7 +32,7 @@ public class JoinServerScreen extends GameAwareScreenAdapter<SpaceHuntersClientG
       @Override
       protected void gotInput(ConnectDialog dialog, String username, String hostname) {
         asyncExecutor.submit(() -> {
-          dialog.setStatus("Verbinden..."); // todo add timeout if LoginAccepted never is received
+          dialog.setStatus("Verbinden..."); // todo add timeout if LoginAcceptedPacket never is received
           Optional<String> error = sendLoginRequest(username, hostname);
           if (error.isPresent()) {
             dialog.setStatus(error.get());
@@ -62,7 +62,7 @@ public class JoinServerScreen extends GameAwareScreenAdapter<SpaceHuntersClientG
       return Optional.of(e.getMessage());
     }
 
-    client.sendTCP(new LoginRequest(new Player(UUID.randomUUID(), username)));
+    client.sendTCP(new LoginRequestPacket(new Player(UUID.randomUUID(), username)));
     return Optional.empty();
   }
 }

@@ -9,8 +9,8 @@ import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.common.drawing.GamefieldScreen;
 import de.fragstyle.spacehunters.common.game.SimpleGame;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
-import de.fragstyle.spacehunters.common.packets.server.GameSnapshot;
-import de.fragstyle.spacehunters.common.packets.server.Player;
+import de.fragstyle.spacehunters.common.game.GameSnapshot;
+import de.fragstyle.spacehunters.common.models.Player;
 import java.io.IOException;
 
 public class SpaceHuntersClientGame extends SimpleGame {

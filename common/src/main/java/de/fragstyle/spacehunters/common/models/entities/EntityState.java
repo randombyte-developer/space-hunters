@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.models;
+package de.fragstyle.spacehunters.common.models.entities;
 
 import com.badlogic.gdx.math.Vector2;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.models.ship;
+package de.fragstyle.spacehunters.common.models.entities.ship;
 
 import aurelienribon.bodyeditor.BodyEditorLoader;
 import com.badlogic.gdx.Gdx;
@@ -9,8 +9,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import de.fragstyle.spacehunters.common.drawing.Textures;
-import de.fragstyle.spacehunters.common.models.Entity;
-import de.fragstyle.spacehunters.common.models.EntityState;
+import de.fragstyle.spacehunters.common.models.entities.Entity;
+import de.fragstyle.spacehunters.common.models.entities.EntityState;
 
 public class ShipEntity extends Entity {
 

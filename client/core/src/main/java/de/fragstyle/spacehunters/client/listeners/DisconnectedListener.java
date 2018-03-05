@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import de.fragstyle.spacehunters.client.SpaceHuntersClientGame;
-import de.fragstyle.spacehunters.common.packets.server.Disconnected;
+import de.fragstyle.spacehunters.common.packets.server.DisconnectedPacket;
 
 public class DisconnectedListener extends Listener {
 
@@ -19,9 +19,9 @@ public class DisconnectedListener extends Listener {
   public void received(Connection connection, Object object) {
     super.received(connection, object);
 
-    if (object instanceof Disconnected) {
-      Disconnected disconnected = (Disconnected) object;
-      String reason = disconnected.getReason();
+    if (object instanceof DisconnectedPacket) {
+      DisconnectedPacket disconnectedPacket = (DisconnectedPacket) object;
+      String reason = disconnectedPacket.getReason();
 
       Gdx.app.log(SpaceHuntersClientGame.TAG, "Disconnected: '" + reason + "'");
     }

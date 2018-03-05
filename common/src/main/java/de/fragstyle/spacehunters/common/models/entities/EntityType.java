@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.models;
+package de.fragstyle.spacehunters.common.models.entities;
 
 public enum EntityType {
   SHIP("ship"),

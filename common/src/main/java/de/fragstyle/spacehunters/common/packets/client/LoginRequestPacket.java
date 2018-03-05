@@ -1,14 +1,14 @@
 package de.fragstyle.spacehunters.common.packets.client;
 
-import de.fragstyle.spacehunters.common.packets.server.Player;
+import de.fragstyle.spacehunters.common.models.Player;
 
-public class LoginRequest {
+public class LoginRequestPacket {
 
   private Player player;
 
-  private LoginRequest() { }
+  private LoginRequestPacket() { }
 
-  public LoginRequest(Player player) {
+  public LoginRequestPacket(Player player) {
     this.player = player;
   }
 

@@ -1,4 +1,4 @@
-package de.fragstyle.spacehunters.common.models.wall;
+package de.fragstyle.spacehunters.common.models.entities.wall;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -8,8 +8,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import de.fragstyle.spacehunters.common.models.Entity;
-import de.fragstyle.spacehunters.common.models.EntityState;
+import de.fragstyle.spacehunters.common.models.entities.Entity;
+import de.fragstyle.spacehunters.common.models.entities.EntityState;
 
 public class WallEntity extends Entity {
 

@@ -2,9 +2,9 @@ package de.fragstyle.spacehunters.server.listeners;
 
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.EndPoint;
-import de.fragstyle.spacehunters.common.models.EntityState;
-import de.fragstyle.spacehunters.common.models.ship.ShipEntity;
-import de.fragstyle.spacehunters.common.models.ship.ShipState;
+import de.fragstyle.spacehunters.common.models.entities.EntityState;
+import de.fragstyle.spacehunters.common.models.entities.ship.ShipEntity;
+import de.fragstyle.spacehunters.common.models.entities.ship.ShipState;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import de.fragstyle.spacehunters.server.ServerPlayer;
 import de.fragstyle.spacehunters.server.SpaceHuntersServerGame;

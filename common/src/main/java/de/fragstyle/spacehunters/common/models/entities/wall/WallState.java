@@ -1,8 +1,8 @@
-package de.fragstyle.spacehunters.common.models.wall;
+package de.fragstyle.spacehunters.common.models.entities.wall;
 
 import com.badlogic.gdx.math.Vector2;
-import de.fragstyle.spacehunters.common.models.EntityState;
-import de.fragstyle.spacehunters.common.models.EntityType;
+import de.fragstyle.spacehunters.common.models.entities.EntityState;
+import de.fragstyle.spacehunters.common.models.entities.EntityType;
 
 public class WallState extends EntityState {
 
