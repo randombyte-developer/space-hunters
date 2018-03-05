@@ -3,6 +3,7 @@ package de.fragstyle.spacehunters.common.drawing;
 import static de.fragstyle.spacehunters.common.drawing.Textures.BACKGROUND_BACK;
 import static de.fragstyle.spacehunters.common.game.Constants.DISPLAY_GAME_TIME_OFFSET;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -26,6 +27,8 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
 
   private final GameSnapshotBuffer gameSnapshotBuffer = new GameSnapshotBuffer();
 
+  private boolean renderingEnabled = true;
+
   public GamefieldScreen(SimpleGame game, @Nullable Player viewer) {
     super(game);
     this.viewer = viewer;
@@ -38,9 +41,13 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
     game.getStage().setDebugAll(true);
   }
 
+  long l = 0;
+
   @Override
   public void render(float delta) {
     super.render(delta);
+
+    if (!renderingEnabled) return;
 
     // draw background
     SpriteBatch spriteBatch = getGame().getStageSpriteBatch();
@@ -56,6 +63,12 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
     long limit = System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET;
     Optional<GameSnapshot> displaySnapshotTimeOpt = gameSnapshotBuffer.getLatestSnapshotBeforeLimit(limit);
     displaySnapshotTimeOpt.ifPresent(gameSnapshot -> {
+
+      long l1 = gameSnapshot.getTime() - this.l;
+      if (l1 > 18) {
+        Gdx.app.log("", "" + l1);
+      }
+      this.l = gameSnapshot.getTime();
 
       Map<UUID, EntityState> shipStates = gameSnapshot.getEntityStates();
       shipStates.forEach((uuid, state) -> {
@@ -118,5 +131,9 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
 
   public Optional<Player> getViewer() {
     return Optional.ofNullable(viewer);
+  }
+
+  public void setRenderingEnabled(boolean renderingEnabled) {
+    this.renderingEnabled = renderingEnabled;
   }
 }

@@ -1,6 +1,7 @@
 package de.fragstyle.spacehunters.server;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -37,12 +38,13 @@ public class SpaceHuntersServerGame extends SimpleGame {
   private Matrix4 debugMatrix;
   private Box2DDebugRenderer debugRenderer;
 
+  private boolean renderingEnabled = true;
+
   @Override
   public void create() {
     super.create();
 
     skin = new Skin(Gdx.files.internal("uiskin.json"));
-    //Gdx.input.setInputProcessor(stage);
 
     gamefieldScreen = new GamefieldScreen(this, null);
     setScreen(gamefieldScreen);
@@ -67,6 +69,11 @@ public class SpaceHuntersServerGame extends SimpleGame {
   @Override
   public void render() {
     super.render();
+
+    if (Gdx.input.isKeyJustPressed(Keys.D)) {
+      renderingEnabled = !renderingEnabled;
+    }
+    gamefieldScreen.setRenderingEnabled(renderingEnabled);
 
     gameState.act(Gdx.graphics.getDeltaTime());
     gameState.logAllShips();

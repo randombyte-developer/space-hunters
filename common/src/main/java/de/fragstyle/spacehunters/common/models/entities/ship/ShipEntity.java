@@ -39,7 +39,7 @@ public class ShipEntity extends Entity {
 
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.density = 1f;
-    fixtureDef.friction = 0.5f;
+    fixtureDef.friction = 0.1f;
     fixtureDef.restitution = 0.3f;
 
     // the texture is a square
