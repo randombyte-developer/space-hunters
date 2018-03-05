@@ -80,9 +80,12 @@ public class SpaceHuntersServerGame extends SimpleGame {
 
     gameSnapshotBuffer.getLatestSnapshotTime().ifPresent(lastSnapshotTime -> {
       GameSnapshot gameSnapshot = gameSnapshotBuffer.getSnapshots().get(lastSnapshotTime); // guaranteed to never be null
-      server.sendToAllUDP(gameSnapshot);
+
+      playerList.sendGameSnapshot(gameSnapshot);
       gamefieldScreen.getGameSnapshotBuffer().addState(gameSnapshot);
     });
+
+    playerList.resendNotVerifiedGameSnapshots(30, gameSnapshotBuffer.getSnapshots()::get);
 
     getCamera().position.set(Vector3.Zero);
     getCamera().zoom = 2.7f;

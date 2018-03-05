@@ -6,6 +6,7 @@ import de.fragstyle.spacehunters.common.models.entities.EntityState;
 import de.fragstyle.spacehunters.common.models.entities.EntityType;
 import de.fragstyle.spacehunters.common.models.entities.ship.ShipState;
 import de.fragstyle.spacehunters.common.models.entities.wall.WallState;
+import de.fragstyle.spacehunters.common.packets.client.GameSnapshotReceivedPacket;
 import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import de.fragstyle.spacehunters.common.packets.client.LoginRequestPacket;
 import de.fragstyle.spacehunters.common.packets.server.DisconnectedPacket;
@@ -27,6 +28,7 @@ public class KryoUtils {
     // client
     kryo.register(InputPacket.class);
     kryo.register(LoginRequestPacket.class);
+    kryo.register(GameSnapshotReceivedPacket.class);
 
     // server
     kryo.register(DisconnectedPacket.class);

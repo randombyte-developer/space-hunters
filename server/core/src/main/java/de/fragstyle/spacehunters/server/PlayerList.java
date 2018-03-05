@@ -1,14 +1,16 @@
 package de.fragstyle.spacehunters.server;
 
+import de.fragstyle.spacehunters.common.game.GameSnapshot;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 
 /**
- * Tracks the connected Players.
+ * Tracks the connected Players and the sent packets.
  */
 public class PlayerList {
 
@@ -38,6 +40,18 @@ public class PlayerList {
    */
   public boolean remove(UUID uuid) {
     return players.remove(uuid) != null;
+  }
+
+  public void sendGameSnapshot(GameSnapshot gameSnapshot) {
+    for (ServerPlayer serverPlayer : players.values()) {
+      serverPlayer.sendGameSnapshot(gameSnapshot);
+    }
+  }
+
+  public void resendNotVerifiedGameSnapshots(int delayBeforeReattempt, Function<Long, GameSnapshot> getGameSnapshotFunction) {
+    for (ServerPlayer serverPlayer : players.values()) {
+      serverPlayer.resendNotVerifiedGameSnapshots(delayBeforeReattempt, getGameSnapshotFunction);
+    }
   }
 
   /**

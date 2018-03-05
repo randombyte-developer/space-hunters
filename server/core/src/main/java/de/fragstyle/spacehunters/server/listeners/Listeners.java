@@ -1,5 +1,6 @@
 package de.fragstyle.spacehunters.server.listeners;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.EndPoint;
 import de.fragstyle.spacehunters.common.models.entities.EntityState;
@@ -38,6 +39,26 @@ public class Listeners {
       @Override
       protected void receivedInputPacket(UUID playerUuid, InputPacket inputPacket) {
         spaceHuntersServerGame.getGameState().handleInputPacket(playerUuid, inputPacket);
+      }
+    });
+
+    endPoint.addListener(new GameSnapshotVerificationListener() {
+      @Override
+      Optional<UUID> getPlayerUuidFromKryoNetClientId(int id) {
+        return spaceHuntersServerGame.getPlayerList().getByKryoNetClientId(id);
+      }
+
+      @Override
+      void gameSnapshotVerified(UUID playerUuid, long time) {
+        ServerPlayer serverPlayer = spaceHuntersServerGame.getPlayerList().getPlayers().get(playerUuid);
+        if (serverPlayer != null) {
+          Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+              serverPlayer.confirmGameSnapshotPacket(time);
+            }
+          });
+        }
       }
     });
   }
