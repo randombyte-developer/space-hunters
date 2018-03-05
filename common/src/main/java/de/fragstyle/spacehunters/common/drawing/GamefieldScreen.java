@@ -26,8 +26,6 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
 
   private final GameSnapshotBuffer gameSnapshotBuffer = new GameSnapshotBuffer();
 
-  //private final Map<UUID, ShipActor> shipActors = new HashMap<>();
-
   public GamefieldScreen(SimpleGame game, @Nullable Player viewer) {
     super(game);
     this.viewer = viewer;

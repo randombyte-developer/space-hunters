@@ -42,9 +42,11 @@ public class GameState {
     for (WallState wallState : wallStates) {
       addEntity(new WallEntity(wallState, world));
     }
+
     addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(50, 100), 30, Vector2.Zero), new Vector2(800, 5)), world));
     addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(-300, -100), 70, Vector2.Zero), new Vector2(400, 100)), world));
     addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(200, -600), 10, Vector2.Zero), new Vector2(400, 500)), world));
+    addEntity(new WallEntity(new WallState(new EntityState(UUID.randomUUID(), new Vector2(-600, 200), 120, Vector2.Zero), new Vector2(100, 600)), world));
   }
 
   public void addEntity(Entity entity) {
