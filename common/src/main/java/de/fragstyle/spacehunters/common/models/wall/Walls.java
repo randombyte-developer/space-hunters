@@ -14,9 +14,9 @@ public class Walls {
 
     // all position refer to the center of the wall
     Vector2 topPosition = new Vector2(centerX, centerY + halfHeight + halfThickness);
-    Vector2 rightPosition = new Vector2(centerX + halfWidth + halfThickness, centerY);
+    Vector2 rightPosition = new Vector2(centerX + halfWidth + halfThickness - thickness, centerY);
     Vector2 bottomPosition = new Vector2(centerX, centerY - halfHeight - halfThickness);
-    Vector2 leftPosition = new Vector2(centerX - halfWidth - halfThickness, centerY);
+    Vector2 leftPosition = new Vector2(centerX - halfWidth - halfThickness + thickness, centerY);
 
     Vector2 horizontalDimensions = new Vector2(width, thickness);
     Vector2 verticalDimensions = new Vector2(thickness, height);

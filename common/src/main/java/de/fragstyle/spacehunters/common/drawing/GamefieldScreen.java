@@ -1,5 +1,6 @@
 package de.fragstyle.spacehunters.common.drawing;
 
+import static de.fragstyle.spacehunters.common.drawing.Textures.BACKGROUND_BACK;
 import static de.fragstyle.spacehunters.common.game.Constants.DISPLAY_GAME_TIME_OFFSET;
 
 import com.badlogic.gdx.graphics.Color;
@@ -31,7 +32,9 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
     super(game);
     this.viewer = viewer;
 
-    game.getCamera().zoom = 2f;
+    Background.generateBackgroundTextures(0.001f);
+
+    game.getCamera().zoom = 1f;
     game.getCamera().position.set(Vector3.Zero);
     game.getCamera().update();
     game.getStage().setDebugAll(true);
@@ -40,6 +43,16 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
   @Override
   public void render(float delta) {
     super.render(delta);
+
+    // draw background
+    SpriteBatch spriteBatch = getGame().getStageSpriteBatch();
+    spriteBatch.begin();
+    for (int x = -1500; x < 1500; x += BACKGROUND_BACK.getWidth()) {
+      for (int y = -1000; y < 1000; y += BACKGROUND_BACK.getHeight()) {
+        spriteBatch.draw(BACKGROUND_BACK, x, y, 0, 0, BACKGROUND_BACK.getWidth(), BACKGROUND_BACK.getHeight());
+      }
+    }
+    spriteBatch.end();
 
     // display a GameSnapshot from some time ago(DISPLAY_GAME_TIME_OFFSET in ms)
     long limit = System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET;
@@ -51,7 +64,6 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
 
         switch (state.getEntityType()) {
           case SHIP:
-            SpriteBatch spriteBatch = getGame().getStageSpriteBatch();
             spriteBatch.begin();
 
             spriteBatch.draw(Textures.SHIP,
@@ -75,7 +87,8 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
             shapeRenderer.setProjectionMatrix(getGame().getStage().getBatch().getProjectionMatrix());
             shapeRenderer.begin(ShapeType.Filled);
             shapeRenderer.setColor(Color.GOLD);
-            shapeRenderer.rect(wallState.getPosition().x - wallState.getDimensions().x / 2f, wallState.getPosition().y - wallState.getDimensions().y / 2f,
+            shapeRenderer.rect(
+                wallState.getPosition().x - wallState.getDimensions().x / 2f, wallState.getPosition().y - wallState.getDimensions().y / 2f,
                 wallState.getOrigin().x, wallState.getOrigin().y,
                 wallState.getDimensions().x, wallState.getDimensions().y,
                 1, 1, wallState.getRotation());
@@ -86,14 +99,6 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
           default:
             throw new IllegalStateException("Unknown EntityType '" + state.getEntityType().getId() + "'!");
         }
-
-
-        /*if (!shipActors.containsKey(uuid)) {
-          getGame().getStage().addActor(new ShipActor(state));
-          //this.shipActors.put(uuid, new ShipActor(state));
-        } else {
-          shipActors.get(uuid).setShipState(state);
-        }*/
 
         if (viewer != null) {
           if (viewer.getUuid().equals(uuid)) {

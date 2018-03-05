@@ -56,7 +56,10 @@ public class GameState {
   }
 
   public void removeShip(UUID uuid) {
-    entities.remove(uuid);
+    Entity entity = entities.remove(uuid);
+    if (entity != null) {
+      world.destroyBody(entity.getBody());
+    }
   }
 
   public void handleInputPacket(UUID shipUuid, InputPacket inputPacket) {
