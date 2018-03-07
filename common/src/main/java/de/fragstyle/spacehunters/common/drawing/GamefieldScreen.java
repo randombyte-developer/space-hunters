@@ -3,7 +3,6 @@ package de.fragstyle.spacehunters.common.drawing;
 import static de.fragstyle.spacehunters.common.drawing.Textures.BACKGROUND_BACK;
 import static de.fragstyle.spacehunters.common.game.Constants.DISPLAY_GAME_TIME_OFFSET;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -11,12 +10,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
 import com.sun.istack.internal.Nullable;
 import de.fragstyle.spacehunters.common.game.GameAwareScreenAdapter;
-import de.fragstyle.spacehunters.common.game.SimpleGame;
-import de.fragstyle.spacehunters.common.models.entities.EntityState;
-import de.fragstyle.spacehunters.common.models.entities.wall.WallState;
 import de.fragstyle.spacehunters.common.game.GameSnapshot;
 import de.fragstyle.spacehunters.common.game.GameSnapshotBuffer;
+import de.fragstyle.spacehunters.common.game.SimpleGame;
 import de.fragstyle.spacehunters.common.models.Player;
+import de.fragstyle.spacehunters.common.models.entities.EntityState;
+import de.fragstyle.spacehunters.common.models.entities.wall.WallState;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,8 +40,6 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
     game.getStage().setDebugAll(true);
   }
 
-  long l = 0;
-
   @Override
   public void render(float delta) {
     super.render(delta);
@@ -63,12 +60,6 @@ public class GamefieldScreen extends GameAwareScreenAdapter<SimpleGame> {
     long limit = System.currentTimeMillis() - DISPLAY_GAME_TIME_OFFSET;
     Optional<GameSnapshot> displaySnapshotTimeOpt = gameSnapshotBuffer.getLatestSnapshotBeforeLimit(limit);
     displaySnapshotTimeOpt.ifPresent(gameSnapshot -> {
-
-      long l1 = gameSnapshot.getTime() - this.l;
-      if (l1 > 18) {
-        Gdx.app.log("", "" + l1);
-      }
-      this.l = gameSnapshot.getTime();
 
       Map<UUID, EntityState> shipStates = gameSnapshot.getEntityStates();
       shipStates.forEach((uuid, state) -> {

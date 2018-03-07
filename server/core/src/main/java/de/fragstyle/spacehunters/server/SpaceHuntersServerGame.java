@@ -10,10 +10,10 @@ import com.esotericsoftware.kryonet.Server;
 import de.fragstyle.spacehunters.common.KryoUtils;
 import de.fragstyle.spacehunters.common.drawing.GamefieldScreen;
 import de.fragstyle.spacehunters.common.game.Constants;
-import de.fragstyle.spacehunters.common.game.GameState;
-import de.fragstyle.spacehunters.common.game.SimpleGame;
 import de.fragstyle.spacehunters.common.game.GameSnapshot;
 import de.fragstyle.spacehunters.common.game.GameSnapshotBuffer;
+import de.fragstyle.spacehunters.common.game.GameState;
+import de.fragstyle.spacehunters.common.game.SimpleGame;
 import de.fragstyle.spacehunters.server.listeners.Listeners;
 import java.io.IOException;
 

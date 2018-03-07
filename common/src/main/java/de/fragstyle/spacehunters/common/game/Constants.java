@@ -4,7 +4,7 @@ public class Constants {
   public static final int TCP_PORT = 9880; // todo make configurable
   public static final int UDP_PORT = 9881;
 
-  public static final int DISPLAY_GAME_TIME_OFFSET = 100;
+  public static final int DISPLAY_GAME_TIME_OFFSET = 200;
 
   public static final float STEP_TIME = 1/60f;
   public static final int VELOCITY_ITERATIONS = 6;
