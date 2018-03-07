@@ -12,7 +12,6 @@ import de.fragstyle.spacehunters.common.packets.client.InputPacket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
 
 /**
@@ -98,15 +97,6 @@ public class GameState {
       float yForce = inputPacket.getAcceleration() * MathUtils.sin(shipEntity.getBody().getAngle()) * Constants.ACCELERATION_FORCE;
       shipEntity.getBody().applyForce(new Vector2(xForce, yForce), shipEntity.getBody().getWorldCenter(), true);
     });
-  }
-
-  public void logAllShips() {
-    for (Entry<UUID, Entity> entry : entities.entrySet()) {
-      entry.getValue();
-      //String output = "V: " + ((int) ship.getXSpeed()) + ";" + ((int) ship.getYSpeed());
-      //String output = "A: " + ((int) ship.getXAcceleration()) + ";" + ((int) ship.getYAcceleration());
-      //Gdx.app.log("", output);
-    }
   }
 
   public World getWorld() {

@@ -76,7 +76,6 @@ public class SpaceHuntersServerGame extends SimpleGame {
     gamefieldScreen.setRenderingEnabled(renderingEnabled);
 
     gameState.act(Gdx.graphics.getDeltaTime());
-    gameState.logAllShips();
 
     millisSinceLastGameStateSnapshot += Gdx.graphics.getDeltaTime() * 1000;
     if (millisSinceLastGameStateSnapshot >= GAME_STATE_TIME_FRAME) {
