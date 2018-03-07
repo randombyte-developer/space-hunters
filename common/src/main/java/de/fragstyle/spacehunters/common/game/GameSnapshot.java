@@ -10,15 +10,15 @@ import java.util.stream.Collectors;
 public class GameSnapshot {
 
   private final long time;
-  private final Map<UUID, EntityState> ships;
+  private final Map<UUID, EntityState> entities;
 
   private GameSnapshot() {
     this(new HashMap<>());
   }
 
-  public GameSnapshot(Map<UUID, EntityState> ships) {
-    this.time = System.currentTimeMillis(); // todo bad?
-    this.ships = ships;
+  public GameSnapshot(Map<UUID, EntityState> entities) {
+    this.time = System.currentTimeMillis();
+    this.entities = entities;
   }
 
   public long getTime() {
@@ -26,7 +26,7 @@ public class GameSnapshot {
   }
 
   public Map<UUID, EntityState> getEntityStates() {
-    return ships;
+    return entities;
   }
 
   public static GameSnapshot fromGameState(GameState gameState) {
